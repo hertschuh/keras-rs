@@ -27,7 +27,7 @@ Or in Colab, with:
 import os
 os.environ["KERAS_BACKEND"] = "jax"
 
-import keras_recommenders
+import keras_rs
 ```
 
 > [!IMPORTANT]
@@ -51,7 +51,7 @@ Here is the BibTeX entry:
   title={KerasRecommenders},
   author={Hertschuh, Fabien and  Chollet, Fran\c{c}ois and others},
   year={2024},
-  howpublished={\url{https://github.com/keras-team/keras-recommenders}},
+  howpublished={\url{https://github.com/keras-team/keras-rs}},
 }
 ```
 
@@ -59,6 +59,6 @@ Here is the BibTeX entry:
 
 Thank you to all of our wonderful contributors!
 
-<a href="https://github.com/keras-team/keras-recommenders/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=keras-team/keras-recommenders" />
+<a href="https://github.com/keras-team/keras-rs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=keras-team/keras-rs" />
 </a>
