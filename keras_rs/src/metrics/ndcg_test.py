@@ -361,12 +361,19 @@ class NDCGTest(testing.TestCase, parameterized.TestCase):
         outputs = keras.layers.Dense(5)(inputs)
         model = keras.Model(inputs=inputs, outputs=outputs)
 
+        def generator():
+            yield (
+                keras.random.normal((2, 20)),
+                keras.random.randint((2, 5), minval=0, maxval=4),
+            )
+            yield (
+                keras.random.normal((1, 20)),
+                keras.random.randint((1, 5), minval=0, maxval=4),
+            )
+
         model.compile(
             loss=keras.losses.MeanSquaredError(),
             metrics=[NDCG()],
             optimizer="adam",
         )
-        model.evaluate(
-            x=keras.random.normal((2, 20)),
-            y=keras.random.randint((2, 5), minval=0, maxval=4),
-        )
+        model.evaluate(generator())

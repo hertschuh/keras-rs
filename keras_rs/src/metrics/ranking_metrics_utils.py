@@ -94,6 +94,7 @@ def sort_by_scores(
             shuffle_ties=True,
             seed=seed,
         )
+        print("### take_along_axis", scores, shuffled_indices)
         scores = ops.take_along_axis(scores, shuffled_indices, axis=1)
 
     # Get top-k indices.
