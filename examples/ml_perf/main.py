@@ -46,7 +46,7 @@ def main(
 
     # === Distributed embeddings' configs for lookup features ===
     # Set XLA flags.
-    os.environ['XLA_FLAGS'] = (
+    os.environ["XLA_FLAGS"] = (
         "--xla_sparse_core_max_ids_per_partition_per_sample="
         f"{max_ids_per_partition} "
         "--xla_sparse_core_max_unique_ids_per_partition_per_sample="
