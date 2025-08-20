@@ -14,8 +14,10 @@ config.dataset.file_pattern = (
     "gs://qinyiyan-vm/mlperf-dataset/criteo_merge_balanced_4224/"
     "train-00000-of-01024tfrecord"
 )
+# The path which we are reading from already has the batched dataset.
+config.dataset.file_batch_size = 4224
 config.model = model_config
 config.training = training_config
-config.training.batch_size = 4224
+config.training.batch_size = 256
 
 config.freeze()

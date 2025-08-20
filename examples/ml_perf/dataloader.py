@@ -7,6 +7,7 @@ class DataLoader:
         self,
         file_pattern,
         batch_size,
+        file_batch_size,
         dense_features,
         large_emb_features,
         small_emb_features,
@@ -16,6 +17,7 @@ class DataLoader:
         # Passed attributes.
         self.file_pattern = file_pattern
         self.batch_size = batch_size
+        self.file_batch_size = file_batch_size
         self.dense_features = dense_features
         self.large_emb_features = large_emb_features
         self.small_emb_features = small_emb_features
@@ -95,21 +97,21 @@ class DataLoader:
     def _get_feature_spec(self):
         feature_spec = {
             self.label: tf.io.FixedLenFeature(
-                [self.batch_size],
+                [self.file_batch_size],
                 dtype=tf.int64,
             )
         }
 
         for dense_feat in self.dense_features:
             feature_spec[dense_feat] = tf.io.FixedLenFeature(
-                [self.batch_size],
+                [self.file_batch_size],
                 dtype=tf.float32,
             )
 
         for emb_feat in self.large_emb_features + self.small_emb_features:
             name = emb_feat["name"]
             feature_spec[name] = tf.io.FixedLenFeature(
-                [self.batch_size],
+                [self.file_batch_size],
                 dtype=tf.string,
             )
 
@@ -123,7 +125,7 @@ class DataLoader:
         # Dense features
         dense_input = tf.stack(
             [
-                tf.reshape(example[dense_feature], [self.batch_size, 1])
+                tf.reshape(example[dense_feature], [self.file_batch_size, 1])
                 for dense_feature in self.dense_features
             ],
             axis=-1,
@@ -138,7 +140,7 @@ class DataLoader:
 
                 raw_values = tf.io.decode_raw(example[name], tf.int64)
                 raw_values = tf.reshape(
-                    raw_values, [self.batch_size, multi_hot_size]
+                    raw_values, [self.file_batch_size, multi_hot_size]
                 )
                 emb_inputs[new_name] = raw_values
             return emb_inputs
@@ -148,7 +150,7 @@ class DataLoader:
         small_emb_inputs = _get_emb_inputs(self.small_emb_features)
 
         # Labels
-        labels = tf.reshape(example[self.label], [self.batch_size])
+        labels = tf.reshape(example[self.label], [self.file_batch_size])
 
         x = {
             "dense_input": dense_input,
@@ -179,13 +181,19 @@ class DataLoader:
 
         # Process example.
         dataset = dataset.map(
-            lambda x: self._preprocess(x),
-            num_parallel_calls=tf.data.AUTOTUNE,
+            self._preprocess, num_parallel_calls=tf.data.AUTOTUNE
         )
+        dataset.unbatch()
 
         # Shuffle dataset if in training mode.
         if self.training and shuffle_buffer and shuffle_buffer > 0:
             dataset = dataset.shuffle(shuffle_buffer)
+
+        dataset = dataset.batch(
+            self.batch_size,
+            drop_remainder=True,
+            num_parallel_calls=tf.data.AUTOTUNE,
+        )
 
         dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
