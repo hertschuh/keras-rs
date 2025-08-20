@@ -110,7 +110,7 @@ class DataLoader:
             name = emb_feat["name"]
             feature_spec[name] = tf.io.FixedLenFeature(
                 [self.batch_size],
-                dtype=tf.string,
+                dtype=tf.int64,
             )
 
         return feature_spec
