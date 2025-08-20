@@ -16,6 +16,7 @@ SEED = 1337
 
 def main(
     file_pattern,
+    val_file_pattern,
     dense_features,
     large_emb_features,
     small_emb_features,
@@ -124,6 +125,7 @@ def main(
     # https://github.com/keras-team/keras-rs/blob/main/keras_rs/src/layers/embedding/base_distributed_embedding.py#L352-L363.
     if num_processes > 1:
         train_ds = distribution.distribute_dataset(train_ds)
+        # eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
     def generator(dataset, training=False):
@@ -144,6 +146,7 @@ def main(
             yield (x, y)
 
     train_generator = generator(train_ds, training=True)
+    # eval_generator = generator(eval_ds, training=False)
     for first_batch in train_generator:
         model(first_batch[0])
         break
@@ -177,6 +180,7 @@ if __name__ == "__main__":
     ds_cfg = config["dataset"]
     # File path
     file_pattern = ds_cfg["file_pattern"]
+    val_file_pattern = ds_cfg("val_file_pattern", None)
     # File batch size
     file_batch_size = ds_cfg.get("file_batch_size", None)
     # Shuffling
@@ -224,6 +228,7 @@ if __name__ == "__main__":
 
     main(
         file_pattern,
+        val_file_pattern,
         dense_features,
         large_emb_features,
         small_emb_features,

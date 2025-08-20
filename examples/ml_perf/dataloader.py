@@ -183,7 +183,7 @@ class DataLoader:
         dataset = dataset.map(
             self._preprocess, num_parallel_calls=tf.data.AUTOTUNE
         )
-        dataset.unbatch()
+        dataset = dataset.unbatch()
 
         # Shuffle dataset if in training mode.
         if self.training and shuffle_buffer and shuffle_buffer > 0:
