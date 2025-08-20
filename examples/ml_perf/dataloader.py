@@ -96,7 +96,7 @@ class DataLoader:
         feature_spec = {
             self.label: tf.io.FixedLenFeature(
                 [self.batch_size],
-                dtype=tf.int64,
+                dtype=tf.float32,
             )
         }
 
