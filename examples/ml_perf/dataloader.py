@@ -52,12 +52,12 @@ class DataLoader:
             name = large_emb_feature["name"]
             new_name = large_emb_feature.get("new_name", name)
             vocabulary_size = large_emb_feature["vocabulary_size"]
-            multi_hot_size = large_emb_feature["multi_hot_size"]
+            feature_list_length = large_emb_feature["feature_list_length"]
 
             large_emb_inputs[f"{new_name}_id"] = np.random.randint(
                 low=0,
                 high=vocabulary_size,
-                size=(self.batch_size, multi_hot_size),
+                size=(self.batch_size, feature_list_length),
                 dtype=np.int64,
             )
 
@@ -69,12 +69,12 @@ class DataLoader:
             name = small_emb_feature["name"]
             new_name = small_emb_feature.get("new_name", name)
             vocabulary_size = small_emb_feature["vocabulary_size"]
-            multi_hot_size = small_emb_feature["multi_hot_size"]
+            feature_list_length = small_emb_feature["feature_list_length"]
 
             small_emb_inputs[f"{new_name}_id"] = np.random.randint(
                 low=0,
                 high=vocabulary_size,
-                size=(self.batch_size, multi_hot_size),
+                size=(self.batch_size, feature_list_length),
                 dtype=np.int64,
             )
 
@@ -136,11 +136,11 @@ class DataLoader:
             for emb_feature in emb_features:
                 name = emb_feature["name"]
                 new_name = emb_feature.get("new_name", name)
-                multi_hot_size = emb_feature["multi_hot_size"]
+                feature_list_length = emb_feature["feature_list_length"]
 
                 raw_values = tf.io.decode_raw(example[name], tf.int64)
                 raw_values = tf.reshape(
-                    raw_values, [self.file_batch_size, multi_hot_size]
+                    raw_values, [self.file_batch_size, feature_list_length]
                 )
                 emb_inputs[f"{new_name}_id"] = raw_values
             return emb_inputs

@@ -49,7 +49,7 @@ def main(
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
         vocabulary_size = large_emb_feature["vocabulary_size"]
-        multi_hot_size = large_emb_feature["multi_hot_size"]
+        feature_list_length = large_emb_feature["feature_list_length"]
 
         table_config = keras_rs.layers.TableConfig(
             name=f"{feature_name}_table",
@@ -76,8 +76,8 @@ def main(
             name=feature_name,
             table=table_config,
             # TODO: Verify whether it should be `(bsz, 1)` or
-            # `(bsz, multi_hot_size)`.
-            input_shape=(per_host_batch_size, multi_hot_size),
+            # `(bsz, feature_list_length)`.
+            input_shape=(per_host_batch_size, feature_list_length),
             output_shape=(per_host_batch_size, embedding_dim),
         )
 
