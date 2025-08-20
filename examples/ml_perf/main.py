@@ -44,7 +44,7 @@ def main(
 
     per_host_batch_size = global_batch_size // num_processes
 
-    # === Distributed embeddings' configs for sparse features ===
+    # === Distributed embeddings' configs for lookup features ===
     feature_configs = {}
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
@@ -82,9 +82,9 @@ def main(
         )
 
     # === Instantiate model ===
-    # We instantiate the model first, because we need to preprocess sparse
-    # inputs using the distributed embedding layer defined inside the model
-    # class.
+    # We instantiate the model first, because we need to preprocess large
+    # embedding feature inputs using the distributed embedding layer defined
+    # inside the model class.
     print("===== Initialising model =====")
     model = DLRMDCNV2(
         large_emb_feature_configs=feature_configs,
@@ -130,7 +130,7 @@ def main(
 
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses
-        sparse features.
+        large embedding features.
         """
         for features, labels in dataset:
             preprocessed_large_embeddings = model.embedding_layer.preprocess(
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     # Features
     label = ds_cfg["label"]
     dense_features = ds_cfg["dense"]
-    emb_features = ds_cfg["sparse"]
+    emb_features = ds_cfg["lookup"]
 
     # == Model config ==
     model_cfg = config["model"]

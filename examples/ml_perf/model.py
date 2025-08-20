@@ -56,7 +56,7 @@ class DLRMDCNV2(keras.Model):
         The model processes two types of input features:
         1. Dense Features: Continuous-valued features that are processed by
            a multi-layer perceptron (the "bottom MLP").
-        2. Sparse Features: High-cardinality categorical features that are
+        2. Lookup Features: High-cardinality categorical features that are
            first mapped into low-dimensional embedding vectors using the
            `keras_rs.layers.DistributedEmbedding` layer. This layer is highly
            optimized for large-scale recommendation models, especially on TPUs

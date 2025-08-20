@@ -46,7 +46,7 @@ class DataLoader:
         ]
         data["dense_input"] = np.concatenate(dense_input_list, axis=-1)
 
-        # Sparse features
+        # Big embedding features
         large_emb_inputs = {}
         for large_emb_feature in self.large_emb_features:
             name = large_emb_feature["name"]
@@ -63,7 +63,7 @@ class DataLoader:
 
         data["large_emb_inputs"] = large_emb_inputs
 
-        # Dense lookup features
+        # Small embedding features
         small_emb_inputs = {}
         for small_emb_feature in self.small_emb_features:
             name = small_emb_feature["name"]
@@ -145,7 +145,7 @@ class DataLoader:
                 emb_inputs[f"{new_name}_id"] = raw_values
             return emb_inputs
 
-        # Sparse features
+        # Embedding/lookup features
         large_emb_inputs = _get_emb_inputs(self.large_emb_features)
         small_emb_inputs = _get_emb_inputs(self.small_emb_features)
 
