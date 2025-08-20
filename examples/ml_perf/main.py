@@ -32,6 +32,7 @@ def main(
     dcn_projection_dim,
     learning_rate,
     global_batch_size,
+    file_batch_size,
     num_epochs,
 ):
     # Set DDP as Keras distribution strategy
@@ -107,6 +108,7 @@ def main(
     train_ds = DataLoader(
         file_pattern=file_pattern,
         batch_size=per_host_batch_size,
+        file_batch_size=file_batch_size,
         dense_features=dense_features,
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
@@ -175,6 +177,8 @@ if __name__ == "__main__":
     ds_cfg = config["dataset"]
     # File path
     file_pattern = ds_cfg["file_pattern"]
+    # File batch size
+    file_batch_size = ds_cfg.get("file_batch_size", None)
     # Shuffling
     shuffle_buffer = ds_cfg.get("shuffle_buffer", None)
     # Features
@@ -236,5 +240,6 @@ if __name__ == "__main__":
         dcn_projection_dim,
         learning_rate,
         global_batch_size,
+        file_batch_size,
         num_epochs,
     )
