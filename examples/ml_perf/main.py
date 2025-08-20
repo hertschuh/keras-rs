@@ -180,7 +180,7 @@ if __name__ == "__main__":
     ds_cfg = config["dataset"]
     # File path
     file_pattern = ds_cfg["file_pattern"]
-    val_file_pattern = ds_cfg("val_file_pattern", None)
+    val_file_pattern = ds_cfg.get("val_file_pattern", None)
     # File batch size
     file_batch_size = ds_cfg.get("file_batch_size", None)
     # Shuffling
