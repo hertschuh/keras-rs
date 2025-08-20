@@ -135,6 +135,10 @@ def main(
         # eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
+    # Print one sample.
+    for element in train_ds.take(1):
+        print(">>> train sample", element[0])
+
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses
         large embedding features.
