@@ -80,6 +80,8 @@ def main(
             input_shape=(per_host_batch_size, feature_list_length),
             output_shape=(per_host_batch_size, embedding_dim),
         )
+    
+    print("-->", os.environ['XLA_FLAGS'])
 
     # === Instantiate model ===
     # We instantiate the model first, because we need to preprocess large
