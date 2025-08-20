@@ -45,6 +45,13 @@ def main(
     per_host_batch_size = global_batch_size // num_processes
 
     # === Distributed embeddings' configs for lookup features ===
+    # Set XLA flags.
+    os.environ['XLA_FLAGS'] = (
+        "--xla_sparse_core_max_ids_per_partition_per_sample="
+        f"{max_ids_per_partition} "
+        "--xla_sparse_core_max_unique_ids_per_partition_per_sample="
+        f"{max_unique_ids_per_partition}"
+    )
     feature_configs = {}
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
@@ -80,8 +87,6 @@ def main(
             input_shape=(per_host_batch_size, feature_list_length),
             output_shape=(per_host_batch_size, embedding_dim),
         )
-    
-    print("-->", os.environ['XLA_FLAGS'])
 
     # === Instantiate model ===
     # We instantiate the model first, because we need to preprocess large
