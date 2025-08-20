@@ -123,7 +123,7 @@ class DataLoader:
         example = tf.io.parse_single_example(example, feature_spec)
 
         # Dense features
-        dense_input = tf.concatenate(
+        dense_input = tf.concat(
             [
                 tf.reshape(example[dense_feature], [self.file_batch_size, 1])
                 for dense_feature in self.dense_features
