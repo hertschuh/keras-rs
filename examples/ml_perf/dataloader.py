@@ -54,7 +54,7 @@ class DataLoader:
             vocabulary_size = large_emb_feature["vocabulary_size"]
             multi_hot_size = large_emb_feature["multi_hot_size"]
 
-            large_emb_inputs[new_name] = np.random.randint(
+            large_emb_inputs[f"{new_name}_id"] = np.random.randint(
                 low=0,
                 high=vocabulary_size,
                 size=(self.batch_size, multi_hot_size),
@@ -71,7 +71,7 @@ class DataLoader:
             vocabulary_size = small_emb_feature["vocabulary_size"]
             multi_hot_size = small_emb_feature["multi_hot_size"]
 
-            small_emb_inputs[new_name] = np.random.randint(
+            small_emb_inputs[f"{new_name}_id"] = np.random.randint(
                 low=0,
                 high=vocabulary_size,
                 size=(self.batch_size, multi_hot_size),
@@ -142,7 +142,7 @@ class DataLoader:
                 raw_values = tf.reshape(
                     raw_values, [self.file_batch_size, multi_hot_size]
                 )
-                emb_inputs[new_name] = raw_values
+                emb_inputs[f"{new_name}_id"] = raw_values
             return emb_inputs
 
         # Sparse features

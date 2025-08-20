@@ -72,7 +72,7 @@ def main(
             max_unique_ids_per_partition=max_unique_ids_per_partition,
         )
         feature_configs[f"{feature_name}_id"] = keras_rs.layers.FeatureConfig(
-            name=feature_name.replace("id", ""),
+            name=feature_name,
             table=table_config,
             # TODO: Verify whether it should be `(bsz, 1)` or
             # `(bsz, multi_hot_size)`.
