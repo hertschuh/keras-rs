@@ -101,7 +101,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --project ${PROJECT} \
   --zone ${ZONE} \
   --worker=all \
-  --command="sudo apt-get update && sudo apt install -y python3.10-venv && if [ ! -d '.keras-env' ]; then echo '>>> Creating .keras-env...'; python3 -m venv .keras-env; else echo '>>> .keras-env already exists.'; fi"
+  --command="sudo apt-get update && sudo apt install -y python3.12-venv && if [ ! -d '.keras-env' ]; then echo '>>> Creating .keras-env...'; python3.12 -m venv .keras-env; else echo '>>> .keras-env already exists.'; fi"
 
 
 # ==============================================================================
@@ -155,7 +155,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --project ${PROJECT} \
   --zone ${ZONE} \
   --worker=all \
-  --command="source .keras-env/bin/activate && echo 'import jax; print(jax.devices())' > script.py && python script.py"
+  --command="source .keras-env/bin/activate && echo 'import jax; print(jax.devices())' > script.py && python3.12 script.py"
 
 
 # ==============================================================================
@@ -166,6 +166,6 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --project ${PROJECT} \
   --zone ${ZONE} \
   --worker=all \
-  --command="source .keras-env/bin/activate && cd keras-rs && python3 -m examples.ml_perf.main --config_name ${CONFIG_NAME}"
+  --command="source .keras-env/bin/activate && cd keras-rs && python3.12 -m examples.ml_perf.main --config_name ${CONFIG_NAME}"
 
 echo ">>> Script finished."

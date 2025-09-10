@@ -115,7 +115,7 @@ def main(
     print("===== Loading dataset =====")
     train_ds = DataLoader(
         file_pattern=file_pattern,
-        batch_size=per_host_batch_size,
+        batch_size=global_batch_size,
         file_batch_size=file_batch_size,
         dense_features=dense_features,
         large_emb_features=large_emb_features,
