@@ -98,6 +98,7 @@ def translate_keras_rs_configuration(
         tf.tpu.experimental.embedding.SparseCoreEmbeddingConfig(
             disable_table_stacking=disable_table_stacking,
             initialize_tables_on_host=False,
+            enable_fast_table_initialization=True,
         )
     )
 
