@@ -50,22 +50,13 @@ def main(
 ):
     print("### TF", tf.__version__)
 
-    topology = tf.tpu.experimental.initialize_tpu_system(resolver)
-
-    device_assignment = tf.tpu.experimental.DeviceAssignment.build(
-        topology, num_replicas=tpu_metadata.num_cores
-    )
-    strategy = tf.distribute.TPUStrategy(
-        resolver, experimental_device_assignment=device_assignment
-    )
-
     print("### Resolver")
     resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu="")
     # print("### Connect")
     # tf.config.experimental_connect_to_cluster(resolver)
     # This is the TPU initialization code that has to be at the beginning.
     print("### Initialize")
-    tf.tpu.experimental.initialize_tpu_system(resolver)
+    topology = tf.tpu.experimental.initialize_tpu_system(resolver)
     print("### Devices", tf.config.list_logical_devices('TPU'))
 
     print("### TPU metadata")
