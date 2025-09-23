@@ -81,12 +81,12 @@ def main(
 
     # === Distributed embeddings' configs for lookup features ===
     # Set XLA flags.
-    os.environ["XLA_FLAGS"] = (
-        "--xla_sparse_core_max_ids_per_partition_per_sample="
-        f"{max_ids_per_partition} "
-        "--xla_sparse_core_max_unique_ids_per_partition_per_sample="
-        f"{max_unique_ids_per_partition}"
-    )
+    # os.environ["XLA_FLAGS"] = (
+    #     "--xla_sparse_core_max_ids_per_partition_per_sample="
+    #     f"{max_ids_per_partition} "
+    #     "--xla_sparse_core_max_unique_ids_per_partition_per_sample="
+    #     f"{max_unique_ids_per_partition}"
+    # )
     feature_configs = {}
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
