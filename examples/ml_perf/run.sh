@@ -55,7 +55,7 @@ fi
 # ==============================================================================
 # Environment Variables
 # ==============================================================================
-export TPU_NAME="abheesht-mlperf-${ACCELERATOR_TYPE}"
+export TPU_NAME="${USER}-mlperf-${ACCELERATOR_TYPE}"
 export ZONE
 export PROJECT
 
@@ -118,7 +118,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
 
     if [ ! -d 'keras-rs' ]; then
       echo '>>> Cloning keras-rs repository...'
-      git clone https://github.com/abheesht17/keras-rs.git
+      git clone https://github.com/hertschuh/keras-rs.git
       cd keras-rs
       git checkout ml-perf
     else
