@@ -51,7 +51,7 @@ def main(
     print("### TF", tf.__version__)
 
     print("### Resolver")
-    resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu="")
+    resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu="local")
     # print("### Connect")
     # tf.config.experimental_connect_to_cluster(resolver)
     # This is the TPU initialization code that has to be at the beginning.
