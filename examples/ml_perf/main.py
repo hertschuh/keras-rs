@@ -194,9 +194,9 @@ def main(
 
     # train_generator = generator(train_ds, training=True)
     # eval_generator = generator(eval_ds, training=False)
-    with strategy.scope():
-        for element in train_ds.take(1):
-            model(element[0])
+    # with strategy.scope():
+    #     for element in train_ds.take(1):
+    #         model(element[0])
 
     # Train the model.
     with strategy.scope():
