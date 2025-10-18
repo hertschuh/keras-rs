@@ -12,6 +12,7 @@ from .dataloader import DataLoader
 from .model import DLRMDCNV2
 
 SEED = 1337
+keras.config.set_random_seed(SEED)
 
 
 def main(
@@ -34,7 +35,7 @@ def main(
     learning_rate,
     global_batch_size,
     file_batch_size,
-    num_epochs,
+    num_steps,
 ):
     # Set DDP as Keras distribution strategy
     devices = keras.distribution.list_devices(device_type="tpu")
@@ -163,7 +164,7 @@ def main(
         break
 
     # Train the model.
-    model.fit(train_generator, epochs=num_epochs)
+    model.fit(train_generator, steps_per_epoch=num_steps)
 
 
 if __name__ == "__main__":
@@ -221,7 +222,7 @@ if __name__ == "__main__":
     training_cfg = config["training"]
     learning_rate = training_cfg["learning_rate"]
     global_batch_size = training_cfg["global_batch_size"]
-    num_epochs = training_cfg["num_epochs"]
+    num_steps = training_cfg["num_steps"]
 
     # For features which have vocabulary_size < embedding_threshold, we can
     # just do a normal dense lookup for those instead of having distributed
@@ -257,5 +258,5 @@ if __name__ == "__main__":
         learning_rate,
         global_batch_size,
         file_batch_size,
-        num_epochs,
+        num_steps,
     )

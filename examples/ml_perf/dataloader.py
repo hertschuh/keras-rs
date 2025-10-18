@@ -91,7 +91,7 @@ class DataLoader:
         labels = dummy_data.pop("clicked")
         features = dummy_data
 
-        dataset = tf.data.Dataset.from_tensors((features, labels)).repeat(512)
+        dataset = tf.data.Dataset.from_tensors((features, labels)).repeat()
         return dataset
 
     def _get_feature_spec(self):

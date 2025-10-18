@@ -55,7 +55,7 @@ fi
 # ==============================================================================
 # Environment Variables
 # ==============================================================================
-export TPU_NAME="abheesht-mlperf-${ACCELERATOR_TYPE}"
+export TPU_NAME="${USER}-mlperf-${ACCELERATOR_TYPE}"
 export ZONE
 export PROJECT
 
@@ -130,9 +130,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
 
     echo '>>> Installing/updating dependencies...'
     pip install -e .
-    pip uninstall -y tensorflow keras
-    pip install git+https://github.com/keras-team/keras.git
-    pip install jax-tpu-embedding tensorflow-cpu
+    pip install -U jax-tpu-embedding tensorflow-cpu keras
   "
 
 
@@ -144,7 +142,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --project ${PROJECT} \
   --zone ${ZONE} \
   --worker=all \
-  --command="source .keras-env/bin/activate && pip uninstall -y jax jaxlib && pip install -U 'jax[tpu]' -f https://storage.googleapis.com/jax-releases/libtpu_releases.html"
+  --command="source .keras-env/bin/activate && pip install -U 'jax[tpu]' -f https://storage.googleapis.com/jax-releases/libtpu_releases.html"
 
 
 # ==============================================================================
@@ -155,7 +153,7 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --project ${PROJECT} \
   --zone ${ZONE} \
   --worker=all \
-  --command="source .keras-env/bin/activate && echo 'import jax; print(jax.devices())' > script.py && python3.12 script.py"
+  --command="source .keras-env/bin/activate && python3.12 -c 'import jax; print(jax.devices())'"
 
 
 # ==============================================================================
