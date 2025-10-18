@@ -12,7 +12,7 @@ from .dataloader import DataLoader
 from .model import DLRMDCNV2
 
 SEED = 1337
-keras.config.set_random_seed(SEED)
+keras.utils.set_random_seed(SEED)
 
 
 def main(
