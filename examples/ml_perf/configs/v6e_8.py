@@ -196,6 +196,7 @@ training_config.global_batch_size = 128
 # Set `num_steps` in the main config file instead of num_epochs, because we are
 # using a Python generator.
 training_config.num_steps = 2
+training_config.eval_freq = 1
 
 # === Assign all configs to the root config ===
 config.dataset = dataset_config
