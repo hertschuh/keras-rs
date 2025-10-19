@@ -591,6 +591,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             mesh.devices.item(0)
         )
         print(f"-->{num_sc_per_device=}")
+        print(f"-->{jax.process_count()=}")
 
         preprocessed, stats = embedding_utils.stack_and_shard_samples(
             self._config.feature_specs,
@@ -612,6 +613,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             def pmax_aggregate(x: Any) -> Any:
                 if not hasattr(x, "ndim"):
                     x = np.array(x)
+                jax.debug.print("--> x.shape={}", x.shape)
                 tiled_x = np.tile(x, (num_local_cpu_devices, *([1] * x.ndim)))
                 return jax.pmap(
                     lambda y: jax.lax.pmax(y, "all_cpus"),  # type: ignore[no-untyped-call]
