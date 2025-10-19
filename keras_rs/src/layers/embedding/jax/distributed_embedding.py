@@ -615,6 +615,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                     x = np.array(x)
                 jax.debug.print("--> x.shape={}", x.shape)
                 tiled_x = np.tile(x, (num_local_cpu_devices, *([1] * x.ndim)))
+                jax.debug.print("--> tiled_x.shape={}", tiled_x.shape)
                 return jax.pmap(
                     lambda y: jax.lax.pmax(y, "all_cpus"),  # type: ignore[no-untyped-call]
                     axis_name="all_cpus",
