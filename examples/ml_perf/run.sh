@@ -144,6 +144,22 @@ gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
   --worker=all \
   --command="source .keras-env/bin/activate && pip install -U 'jax[tpu]' -f https://storage.googleapis.com/jax-releases/libtpu_releases.html"
 
+# ==============================================================================
+# Kill Previous Training Processes
+# ==============================================================================
+# echo ">>> Listing matching processes..."
+# gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
+#   --project ${PROJECT} \
+#   --zone ${ZONE} \
+#   --worker=all \
+#   --command="ps aux | grep '[e]xamples.ml_perf.main' || true"
+
+# echo ">>> Terminating any existing training processes..."
+# gcloud alpha compute tpus tpu-vm ssh ${TPU_NAME} \
+#   --project ${PROJECT} \
+#   --zone ${ZONE} \
+#   --worker=all \
+#   --command="pkill -9 -f 'python3.12 -m examples.ml_perf.[m]ain.*' || true"
 
 # ==============================================================================
 # Verify Installation
