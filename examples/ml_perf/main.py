@@ -85,8 +85,8 @@ def main(
             table=table_config,
             # TODO: Verify whether it should be `(bsz, 1)` or
             # `(bsz, feature_list_length)`. The original example uses 1.
-            input_shape=(global_batch_size, 1),
-            output_shape=(global_batch_size, embedding_dim),
+            input_shape=(per_host_batch_size, 1),
+            output_shape=(per_host_batch_size, embedding_dim),
         )
 
     # === Instantiate model ===
