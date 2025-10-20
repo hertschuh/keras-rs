@@ -154,18 +154,18 @@ def main(
                 "large_emb_inputs": preprocessed_large_embeddings,
                 "small_emb_inputs": features["small_emb_inputs"],
             }
-            print(x["large_emb_inputs"])
             y = labels
             yield (x, y)
 
     train_generator = generator(train_ds, training=True)
     # eval_generator = generator(eval_ds, training=False)
     for first_batch in train_generator:
-        model(first_batch[0])
+        print(first_batch[0])
+        # model(first_batch[0])
         break
 
     # Train the model.
-    model.fit(train_generator, steps_per_epoch=num_steps)
+    # model.fit(train_generator, steps_per_epoch=num_steps)
 
 
 if __name__ == "__main__":
