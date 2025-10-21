@@ -18,7 +18,7 @@ keras.config.disable_traceback_filtering()
 class MetricLogger(keras.callbacks.Callback):
     def on_train_batch_end(self, batch, logs=None):
         keys = list(logs.keys())
-        print("...Training: end of batch {}; got log keys: {}".format(batch, keys))
+        print("--->", logs["loss"])
 
 def main(
     file_pattern,
