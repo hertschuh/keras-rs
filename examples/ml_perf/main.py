@@ -138,7 +138,7 @@ def main(
 
     # Print one sample.
     for element in train_ds.take(1):
-        print(">>> train sample", element[0]["large_emb_inputs"]['cat_32_id'])
+        print(">>> train sample", element[0]["large_emb_inputs"]['cat_33_id'])
         print(">>> train sample", element[0]["small_emb_inputs"])
 
     # def generator(dataset, training=False):
