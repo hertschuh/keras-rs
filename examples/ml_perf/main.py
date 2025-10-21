@@ -165,11 +165,11 @@ def main(
         print("-------> small", first_batch[0]["small_emb_inputs"]['cat_39_id'])
         print("-------> large", first_batch[0]["large_emb_inputs"])
 
-        model(first_batch[0])
+        # model(first_batch[0])
         break
 
     # # Train the model.
-    # model.fit(train_generator, steps_per_epoch=num_steps)
+    model.fit(train_generator, steps_per_epoch=num_steps)
 
 
 if __name__ == "__main__":
