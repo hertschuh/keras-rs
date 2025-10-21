@@ -165,7 +165,7 @@ def main(
         print("-------> small", first_batch[0]["small_emb_inputs"]['cat_39_id'])
         print("-------> large", first_batch[0]["large_emb_inputs"])
 
-        # model(first_batch[0])
+        model(first_batch[0])
         break
 
     # # Train the model.
