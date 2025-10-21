@@ -170,7 +170,7 @@ def main(
         break
 
     # # Train the model.
-    model.fit(train_generator, steps_per_epoch=num_steps)
+    model.fit(train_generator, steps_per_epoch=num_steps, verbose=0)
 
 
 if __name__ == "__main__":
