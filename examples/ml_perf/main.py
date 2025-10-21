@@ -15,6 +15,10 @@ SEED = 1337
 keras.utils.set_random_seed(SEED)
 keras.config.disable_traceback_filtering()
 
+class MetricLogger(keras.callbacks.Callback):
+    def on_train_batch_end(self, batch, logs=None):
+        keys = list(logs.keys())
+        print("...Training: end of batch {}; got log keys: {}".format(batch, keys))
 
 def main(
     file_pattern,
@@ -170,7 +174,12 @@ def main(
         break
 
     # # Train the model.
-    model.fit(train_generator, steps_per_epoch=num_steps, verbose=0)
+    model.fit(
+        train_generator,
+        steps_per_epoch=num_steps,
+        callbacks=[MetricLogger()],
+        verbose=0,
+    )
 
 
 if __name__ == "__main__":
