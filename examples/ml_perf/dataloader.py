@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
+SEED = 1337
 
 class DataLoader:
     def __init__(
@@ -167,15 +168,9 @@ class DataLoader:
         if self._return_dummy_dataset:
             return self._create_dummy_dataset()
 
+        # Important to specify shuffle = False here to ensure all processes have
+        # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
-
-        # # Shard the dataset across hosts/workers.
-        # # TODO: Do we need to do this if we are distributing the dataset
-        # # manually using distribution.distribute_dataset(...)?
-        # This is not needed, because distribute_dataset shards the dataset
-        # across hosts.
-        # if num_processes > 1:
-        #     dataset = dataset.shard(num_processes, process_id)
 
         dataset = tf.data.TFRecordDataset(
             dataset,
@@ -189,9 +184,10 @@ class DataLoader:
         )
         dataset = dataset.unbatch()
 
-        # Shuffle dataset if in training mode.
+        # Shuffle dataset if in training mode. Pass a seed so that all processes
+        # have the same shuffle.
         if self.training and shuffle_buffer and shuffle_buffer > 0:
-            dataset = dataset.shuffle(shuffle_buffer)
+            dataset = dataset.shuffle(shuffle_buffer, seed=SEED)
 
         dataset = dataset.batch(
             self.batch_size,
