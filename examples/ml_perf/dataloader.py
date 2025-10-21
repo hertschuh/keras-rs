@@ -163,7 +163,9 @@ class DataLoader:
 
     def create_dataset(self, process_id=0, num_processes=1, shuffle_buffer=256):
         if self._return_dummy_dataset:
-            return self._create_dummy_dataset()
+            dataset = self._create_dummy_dataset()
+            dataset = dataset.shard(num_processes, process_id)
+            return dataset
 
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
 
