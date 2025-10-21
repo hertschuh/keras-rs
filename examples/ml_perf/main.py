@@ -13,6 +13,7 @@ from .model import DLRMDCNV2
 
 SEED = 1337
 keras.utils.set_random_seed(SEED)
+keras.config.disable_traceback_filtering()
 
 
 def main(
