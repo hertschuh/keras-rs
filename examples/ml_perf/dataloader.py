@@ -26,7 +26,7 @@ class DataLoader:
 
         # Derived attributes.
         self._return_dummy_dataset = file_pattern is None
-        self._per_host_batch_size = self.batch_size // jax.process_count()
+        # self._per_host_batch_size = self.batch_size // jax.process_count()
 
     def _get_dummy_batch(self):
         """Returns a dummy batch of data in the final desired structure."""
@@ -194,7 +194,7 @@ class DataLoader:
             dataset = dataset.shuffle(shuffle_buffer)
 
         dataset = dataset.batch(
-            self._per_host_batch_size,
+            self.batch_size,
             drop_remainder=True,
             num_parallel_calls=tf.data.AUTOTUNE,
         )
