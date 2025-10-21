@@ -132,40 +132,40 @@ def main(
     # See note here:
     # https://github.com/keras-team/keras-rs/blob/main/keras_rs/src/layers/embedding/base_distributed_embedding.py#L352-L363.
     if num_processes > 1:
-        # train_ds = distribution.distribute_dataset(train_ds)
+        train_ds = distribution.distribute_dataset(train_ds)
         # eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
     # Print one sample.
-    # for element in train_ds.take(1):
-    #     print(">>> train sample", element[0])
+    for element in train_ds.take(1):
+        print(">>> train sample", element[0])
 
-    def generator(dataset, training=False):
-        """Converts tf.data Dataset to a Python generator and preprocesses
-        large embedding features.
-        """
-        for features, labels in dataset:
-            preprocessed_large_embeddings = model.embedding_layer.preprocess(
-                features["large_emb_inputs"], training=training
-            )
+    # def generator(dataset, training=False):
+    #     """Converts tf.data Dataset to a Python generator and preprocesses
+    #     large embedding features.
+    #     """
+    #     for features, labels in dataset:
+    #         preprocessed_large_embeddings = model.embedding_layer.preprocess(
+    #             features["large_emb_inputs"], training=training
+    #         )
 
-            x = {
-                "dense_input": features["dense_input"],
-                "large_emb_inputs": preprocessed_large_embeddings,
-                "small_emb_inputs": features["small_emb_inputs"],
-            }
-            y = labels
-            yield (x, y)
+    #         x = {
+    #             "dense_input": features["dense_input"],
+    #             "large_emb_inputs": preprocessed_large_embeddings,
+    #             "small_emb_inputs": features["small_emb_inputs"],
+    #         }
+    #         y = labels
+    #         yield (x, y)
 
-    train_generator = generator(train_ds, training=True)
-    # eval_generator = generator(eval_ds, training=False)
-    for first_batch in train_generator:
-        print(first_batch[0])
-        # model(first_batch[0])
-        break
+    # train_generator = generator(train_ds, training=True)
+    # # eval_generator = generator(eval_ds, training=False)
+    # for first_batch in train_generator:
+    #     print(first_batch[0])
+    #     # model(first_batch[0])
+    #     break
 
-    # Train the model.
-    model.fit(train_generator, steps_per_epoch=num_steps)
+    # # Train the model.
+    # model.fit(train_generator, steps_per_epoch=num_steps)
 
 
 if __name__ == "__main__":

@@ -26,6 +26,7 @@ class DataLoader:
 
         # Derived attributes.
         self._return_dummy_dataset = file_pattern is None
+        self._per_host_batch_size = self.batch_size // jax.process_count()
 
     def _get_dummy_batch(self):
         """Returns a dummy batch of data in the final desired structure."""
@@ -91,7 +92,8 @@ class DataLoader:
         labels = dummy_data.pop("clicked")
         features = dummy_data
 
-        dataset = tf.data.Dataset.from_tensors((features, labels)).repeat()
+        dataset = tf.data.Dataset.from_tensors((features, labels))
+        dataset = dataset.repeat()
         return dataset
 
     def _get_feature_spec(self):
@@ -163,17 +165,17 @@ class DataLoader:
 
     def create_dataset(self, process_id=0, num_processes=1, shuffle_buffer=256):
         if self._return_dummy_dataset:
-            dataset = self._create_dummy_dataset()
-            dataset = dataset.shard(num_processes, process_id)
-            return dataset
+            return self._create_dummy_dataset()
 
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
 
-        # Shard the dataset across hosts/workers.
-        # TODO: Do we need to do this if we are distributing the dataset
-        # manually using distribution.distribute_dataset(...)?
-        if num_processes > 1:
-            dataset = dataset.shard(num_processes, process_id)
+        # # Shard the dataset across hosts/workers.
+        # # TODO: Do we need to do this if we are distributing the dataset
+        # # manually using distribution.distribute_dataset(...)?
+        # This is not needed, because distribute_dataset shards the dataset
+        # across hosts.
+        # if num_processes > 1:
+        #     dataset = dataset.shard(num_processes, process_id)
 
         dataset = tf.data.TFRecordDataset(
             dataset,
@@ -192,7 +194,7 @@ class DataLoader:
             dataset = dataset.shuffle(shuffle_buffer)
 
         dataset = dataset.batch(
-            self.batch_size,
+            self._per_host_batch_size,
             drop_remainder=True,
             num_parallel_calls=tf.data.AUTOTUNE,
         )
