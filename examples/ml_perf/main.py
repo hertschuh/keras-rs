@@ -161,8 +161,10 @@ def main(
     train_generator = generator(train_ds, training=True)
     # # eval_generator = generator(eval_ds, training=False)
     for first_batch in train_generator:
-        print(first_batch[0]["dense_input"])
-        print(first_batch[0]["small_emb_inputs"]['cat_39_id'])
+        print("------>dense", first_batch[0]["dense_input"])
+        print("-------> small", first_batch[0]["small_emb_inputs"]['cat_39_id'])
+        print("-------> large", first_batch[0]["large_emb_inputs"])
+
         # model(first_batch[0])
         break
 
