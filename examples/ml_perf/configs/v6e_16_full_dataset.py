@@ -207,6 +207,7 @@ training_config.global_batch_size = 16384
 # generator.
 training_config.num_steps = 10
 training_config.eval_freq = 5
+training_config.num_eval_steps = 10
 
 # === Assign all configs to the root config ===
 config.dataset = dataset_config

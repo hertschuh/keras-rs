@@ -18,6 +18,7 @@ class DataLoader:
         large_emb_features,
         small_emb_features,
         label,
+        num_steps,
         training=False,
     ):
         passed_args = locals()
@@ -31,6 +32,7 @@ class DataLoader:
         self.large_emb_features = large_emb_features
         self.small_emb_features = small_emb_features
         self.label = label
+        self.num_steps = num_steps
         self.training = training
 
         # Derived attributes.
@@ -200,6 +202,9 @@ class DataLoader:
         )
         dataset = dataset.unbatch()
 
+        # Take only `num_steps * self.batch_size` examples.
+        dataset = dataset.take(self.num_steps * self.batch_size)
+
         # Shuffle dataset if in training mode. Pass a seed so that all processes
         # have the same shuffle.
         if self.training and shuffle_buffer and shuffle_buffer > 0:
@@ -210,6 +215,10 @@ class DataLoader:
             drop_remainder=True,
             num_parallel_calls=tf.data.AUTOTUNE,
         )
+
+        # Repeat the dataset infinite number of times so that the generator
+        # does not run out.
+        dataset = dataset.repeat()
 
         dataset = dataset.prefetch(tf.data.AUTOTUNE)
 

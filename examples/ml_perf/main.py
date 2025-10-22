@@ -130,6 +130,18 @@ def main(
 
     # === Load dataset ===
     logger.info("Loading dataset...")
+
+    # Keras does not have a straightforward way to log at a step-level instead
+    # of epoch-level. So, we do a workaround here.
+    if ds_cfg.val_file_pattern:
+        steps_per_epoch = training_cfg.eval_freq
+        epochs = training_cfg.num_steps // training_cfg.eval_freq
+        do_eval = True
+    else:
+        steps_per_epoch = training_cfg.num_steps
+        epochs = 1
+        do_eval = False
+
     train_ds = DataLoader(
         file_pattern=ds_cfg.file_pattern,
         batch_size=training_cfg.global_batch_size,
@@ -138,15 +150,14 @@ def main(
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
         label=ds_cfg.label,
+        steps=steps_per_epoch,
         training=True,
     ).create_dataset(
         process_id=distribution._process_id,
         num_processes=num_processes,
         shuffle_buffer=ds_cfg.get("shuffle_buffer", None),
     )
-    do_eval = False
-    if ds_cfg.val_file_pattern:
-        do_eval = True
+    if do_eval:
         eval_ds = DataLoader(
             file_pattern=ds_cfg.val_file_pattern,
             batch_size=training_cfg.global_batch_size,
@@ -155,6 +166,7 @@ def main(
             large_emb_features=large_emb_features,
             small_emb_features=small_emb_features,
             label=ds_cfg.label,
+            steps=training_cfg.num_eval_steps,
             training=False,
         ).create_dataset(
             process_id=distribution._process_id,
@@ -204,17 +216,14 @@ def main(
 
     # === Training ===
     logger.info("Training...")
-    # Keras does not have a straightforward way to log at a step-level instead
-    # of epoch-level. So, we do a workaround here.
-    steps_per_epoch = training_cfg.eval_freq
-    epochs = training_cfg.num_steps // training_cfg.eval_freq
     model.fit(
         train_generator,
         validation_data=eval_generator,
+        epochs=epochs,
         steps_per_epoch=steps_per_epoch,
         callbacks=[MetricLogger()],
+        validation_steps=training_cfg.num_eval_steps,
         validation_freq=1,
-        epochs=epochs,
     )
     logger.info("Training finished")
 
