@@ -5,6 +5,8 @@ import tensorflow as tf
 
 SEED = 1337
 
+logger = logging.getLogger(__name__)
+
 
 class DataLoader:
     def __init__(
@@ -19,7 +21,7 @@ class DataLoader:
         training=False,
     ):
         passed_args = locals()
-        logging.debug("Initialising DataLoader with: %s", passed_args)
+        logger.debug("Initialising `DataLoader` with: %s", passed_args)
 
         # Passed attributes.
         self.file_pattern = file_pattern
@@ -95,7 +97,7 @@ class DataLoader:
 
     def _create_dummy_dataset(self):
         """Creates a TF dummy dataset (randomly initialised)."""
-        logging.info("=== Creating dummy dataset ===")
+        logger.info("=== Creating dummy dataset ===")
         dummy_data = self._get_dummy_batch()
 
         # Separate labels from features to create a `(features, labels)` tuple.
@@ -175,16 +177,16 @@ class DataLoader:
 
     def create_dataset(self, process_id=0, num_processes=1, shuffle_buffer=256):
         passed_args = locals()
-        logging.debug("Called `create_dataset` with:%s", passed_args)
+        logger.debug("Called `create_dataset` with:%s", passed_args)
 
         if self._return_dummy_dataset:
             return self._create_dummy_dataset()
 
-        logging.info("=== Loading the real dataset from files ===")
+        logger.info("=== Loading the real dataset from files ===")
         # Important to specify shuffle = False here to ensure all processes have
         # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
-        logging.info("List of input files: %s", [f for f in dataset])
+        logger.info("List of input files: %s", [f for f in dataset])
 
         dataset = tf.data.TFRecordDataset(
             dataset,
