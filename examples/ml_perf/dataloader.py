@@ -19,6 +19,7 @@ class DataLoader:
         small_emb_features,
         label,
         num_steps,
+        repeat=False,
         training=False,
     ):
         passed_args = locals()
@@ -33,6 +34,7 @@ class DataLoader:
         self.small_emb_features = small_emb_features
         self.label = label
         self.num_steps = num_steps
+        self.repeat = repeat
         self.training = training
 
         # Derived attributes.
@@ -218,7 +220,8 @@ class DataLoader:
 
         # Repeat the dataset infinite number of times so that the generator
         # does not run out.
-        dataset = dataset.repeat()
+        if self.repeat:
+            dataset = dataset.repeat()
 
         dataset = dataset.prefetch(tf.data.AUTOTUNE)
 

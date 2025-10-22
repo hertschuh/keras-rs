@@ -167,6 +167,7 @@ def main(
             small_emb_features=small_emb_features,
             label=ds_cfg.label,
             num_steps=training_cfg.num_eval_steps,
+            repeat=True,
             training=False,
         ).create_dataset(
             process_id=distribution._process_id,
