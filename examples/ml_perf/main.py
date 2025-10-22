@@ -106,7 +106,7 @@ def main(
     # We instantiate the model first, because we need to preprocess large
     # embedding feature inputs using the distributed embedding layer defined
     # inside the model class.
-    logger.info("===== Initialising model =====")
+    logger.info("Initialising model...")
     model = DLRMDCNV2(
         large_emb_feature_configs=feature_configs,
         small_emb_features=small_emb_features,
@@ -126,15 +126,15 @@ def main(
         ),
         metrics=[keras.metrics.BinaryAccuracy()],
     )
-    logger.info("Initialised model:\n%s", model)
+    logger.info("Initialised model: %s", model)
 
     # === Load dataset ===
-    logger.info("===== Loading dataset =====")
+    logger.info("Loading dataset...")
     train_ds = DataLoader(
         file_pattern=ds_cfg.file_pattern,
         batch_size=training_cfg.global_batch_size,
         file_batch_size=ds_cfg.get("file_batch_size", None),
-        dense_features=ds_cfg.dense_features,
+        dense_features=ds_cfg.dense,
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
         label=ds_cfg.label,
@@ -169,7 +169,7 @@ def main(
             y = labels
             yield (x, y)
 
-    logger.info("=== Preprocessing large embedding tables ===")
+    logger.info("Preprocessing large embedding tables...")
     train_generator = generator(train_ds, training=True)
     # eval_generator = generator(eval_ds, training=False)
     logger.debug("Inspecting one batch of data...")
@@ -183,10 +183,10 @@ def main(
             "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
         )
         break
-    logger.info("=== Successfully preprocessed one batch of data ===")
+    logger.info("Successfully preprocessed one batch of data")
 
     # === Training ===
-    logger.info("===== Training =====")
+    logger.info("Training...")
     model.fit(
         train_generator,
         steps_per_epoch=training_cfg.num_steps,
@@ -202,7 +202,7 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S",
     )
 
-    logger.info("===== Launching train script =====")
+    logger.info("Launching train script...")
     parser = argparse.ArgumentParser(
         description=(
             "Benchmark the DLRM-DCNv2 model on the Criteo dataset (MLPerf)"
@@ -213,11 +213,11 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    logger.info("===== Reading config from %s ======", args.config_name)
+    logger.info("Reading config from %s", args.config_name)
     config = importlib.import_module(
         f".configs.{args.config_name}", package=__package__
     ).config
-    logger.info("Config:\n%s", config)
+    logger.info("Config: %s", config)
 
     ds_cfg = config["dataset"]
     model_cfg = config["model"]

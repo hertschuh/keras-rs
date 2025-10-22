@@ -97,7 +97,7 @@ class DataLoader:
 
     def _create_dummy_dataset(self):
         """Creates a TF dummy dataset (randomly initialised)."""
-        logger.info("=== Creating dummy dataset ===")
+        logger.info("Creating dummy dataset...")
         dummy_data = self._get_dummy_batch()
 
         # Separate labels from features to create a `(features, labels)` tuple.
@@ -182,7 +182,7 @@ class DataLoader:
         if self._return_dummy_dataset:
             return self._create_dummy_dataset()
 
-        logger.info("=== Loading the real dataset from files ===")
+        logger.info("Loading the real dataset from files...")
         # Important to specify shuffle = False here to ensure all processes have
         # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
