@@ -9,6 +9,7 @@ import keras
 import numpy as np
 from jax import numpy as jnp
 from jax.experimental import layout as jax_layout
+from jax.experimental import multihost_utils
 from jax_tpu_embedding.sparsecore.lib.nn import embedding
 from jax_tpu_embedding.sparsecore.lib.nn import embedding_spec
 from jax_tpu_embedding.sparsecore.lib.nn import (
@@ -580,18 +581,12 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         )
 
         layout = self._sparsecore_layout
-        # print(f"-->{layout=}")
         mesh = layout.device_mesh.backend_mesh
-        # print(f"-->{mesh=}")
         global_device_count = mesh.devices.size
-        # print(f"-->{global_device_count=}")
         local_device_count = mesh.local_mesh.devices.size
-        # print(f"{local_device_count=}")
         num_sc_per_device = jte_utils.num_sparsecores_per_device(
             mesh.devices.item(0)
         )
-        # print(f"-->{num_sc_per_device=}")
-        # print(f"-->{jax.process_count()=}")
 
         preprocessed, stats = embedding_utils.stack_and_shard_samples(
             self._config.feature_specs,
@@ -600,61 +595,54 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             global_device_count,
             num_sc_per_device,
         )
-        # print(f"-->{stats=}")
 
-        # if training:
-        #     # Synchronize input statistics across all devices and update the
-        #     # underlying stacked tables specs in the feature specs.
+        if training:
+            # Synchronize input statistics across all devices and update the
+            # underlying stacked tables specs in the feature specs.
 
-        #     # Aggregate stats across all processes/devices via pmax.
-        #     num_local_cpu_devices = jax.local_device_count("cpu")
-        #     print(f"-->{num_local_cpu_devices=}")
+            # Aggregate stats across all processes/devices via pmax.
+            all_stats = multihost_utils.process_allgather(stats)
+            aggregated_stats = jax.tree.map(
+                lambda x: jnp.max(x, axis=0), all_stats
+            )
 
-        #     def pmax_aggregate(x: Any) -> Any:
-        #         if not hasattr(x, "ndim"):
-        #             x = np.array(x)
-        #         jax.debug.print("--> x.shape={}", x.shape)
-        #         tiled_x = np.tile(x, (num_local_cpu_devices, *([1] * x.ndim)))
-        #         jax.debug.print("--> tiled_x.shape={}", tiled_x.shape)
-        #         return jax.pmap(
-        #             lambda y: jax.lax.pmax(y, "all_cpus"),  # type: ignore[no-untyped-call]
-        #             axis_name="all_cpus",
-        #             backend="cpu",
-        #         )(tiled_x)[0]
+            # Check if stats changed enough to warrant action.
+            stacked_table_specs = embedding.get_stacked_table_specs(
+                self._config.feature_specs
+            )
+            changed = any(
+                np.max(aggregated_stats.max_ids_per_partition[stack_name])
+                > spec.max_ids_per_partition
+                or np.max(
+                    aggregated_stats.max_unique_ids_per_partition[stack_name]
+                )
+                > spec.max_unique_ids_per_partition
+                or (
+                    np.max(
+                        aggregated_stats.required_buffer_size_per_sc[stack_name]
+                    )
+                    * num_sc_per_device
+                )
+                > (spec.suggested_coo_buffer_size_per_device or 0)
+                for stack_name, spec in stacked_table_specs.items()
+            )
 
-        #     full_stats = jax.tree.map(pmax_aggregate, stats)
+            # Update configuration and repeat preprocessing if stats changed.
+            if changed:
+                embedding.update_preprocessing_parameters(
+                    self._config.feature_specs,
+                    aggregated_stats,
+                    num_sc_per_device,
+                )
 
-        #     # Check if stats changed enough to warrant action.
-        #     stacked_table_specs = embedding.get_stacked_table_specs(
-        #         self._config.feature_specs
-        #     )
-        #     changed = any(
-        #         np.max(full_stats.max_ids_per_partition[stack_name])
-        #         > spec.max_ids_per_partition
-        #         or np.max(full_stats.max_unique_ids_per_partition[stack_name])
-        #         > spec.max_unique_ids_per_partition
-        #         or (
-        #             np.max(full_stats.required_buffer_size_per_sc[stack_name])
-        #             * num_sc_per_device
-        #         )
-        #         > (spec.suggested_coo_buffer_size_per_device or 0)
-        #         for stack_name, spec in stacked_table_specs.items()
-        #     )
-
-        #     # Update configuration and repeat preprocessing if stats changed.
-        #     if changed:
-        #         embedding.update_preprocessing_parameters(
-        #             self._config.feature_specs, full_stats, num_sc_per_device
-        #         )
-
-        #         # Re-execute preprocessing with consistent input statistics.
-        #         preprocessed, _ = embedding_utils.stack_and_shard_samples(
-        #             self._config.feature_specs,
-        #             samples,
-        #             local_device_count,
-        #             global_device_count,
-        #             num_sc_per_device,
-        #         )
+                # Re-execute preprocessing with consistent input statistics.
+                preprocessed, _ = embedding_utils.stack_and_shard_samples(
+                    self._config.feature_specs,
+                    samples,
+                    local_device_count,
+                    global_device_count,
+                    num_sc_per_device,
+                )
 
         return {"inputs": preprocessed}
 
