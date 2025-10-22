@@ -211,7 +211,6 @@ def stack_and_shard_samples(
 
     jax.tree.map(collect_tokens_and_weights, feature_specs, feature_samples)
 
-    print("BATCH SIZE PER SC", feature_tokens[0].shape[0] // num_sc_per_device)
     preprocessed_inputs, stats = embedding.preprocess_sparse_dense_matmul_input(
         feature_tokens,
         feature_weights,

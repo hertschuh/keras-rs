@@ -202,7 +202,7 @@ model_config.dcn_projection_dim = 512
 # === Training ===
 training_config = Config()
 training_config.learning_rate = 0.0034
-training_config.global_batch_size = 128
+training_config.global_batch_size = 16384
 # Set `num_steps` instead of `num_epochs`, because we are using a Python
 # generator.
 training_config.num_steps = 10
