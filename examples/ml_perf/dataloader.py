@@ -36,7 +36,7 @@ class DataLoader:
         # Derived attributes.
         self._return_dummy_dataset = file_pattern is None
         if self._return_dummy_dataset:
-            logging.warning(
+            logger.warning(
                 "`file_pattern` is `None`. Will use the dummy dataset."
             )
 
