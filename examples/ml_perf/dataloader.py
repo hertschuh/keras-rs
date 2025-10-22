@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow as tf
 
+from absl import logging
+
 SEED = 1337
 
 class DataLoader:
@@ -15,6 +17,9 @@ class DataLoader:
         label,
         training=False,
     ):
+        passed_args = locals()
+        logging.debug("Initialising DataLoader with: %s", passed_args)
+
         # Passed attributes.
         self.file_pattern = file_pattern
         self.batch_size = batch_size
@@ -27,11 +32,13 @@ class DataLoader:
 
         # Derived attributes.
         self._return_dummy_dataset = file_pattern is None
-        # self._per_host_batch_size = self.batch_size // jax.process_count()
+        if self._return_dummy_dataset:
+            logging.warning(
+                "`file_pattern` is `None`. Will use the dummy dataset."
+            )
 
     def _get_dummy_batch(self):
         """Returns a dummy batch of data in the final desired structure."""
-
         # Labels
         data = {
             "clicked": np.random.randint(
@@ -87,6 +94,7 @@ class DataLoader:
 
     def _create_dummy_dataset(self):
         """Creates a TF dummy dataset (randomly initialised)."""
+        logging.info("=== Creating dummy dataset ===")
         dummy_data = self._get_dummy_batch()
 
         # Separate labels from features to create a `(features, labels)` tuple.
@@ -165,13 +173,17 @@ class DataLoader:
         return (x, labels)
 
     def create_dataset(self, process_id=0, num_processes=1, shuffle_buffer=256):
+        passed_args = locals()
+        logging.debug("Called `create_dataset` with:%s", passed_args)
+
         if self._return_dummy_dataset:
             return self._create_dummy_dataset()
 
+        logging.info("=== Loading the real dataset from files ===")
         # Important to specify shuffle = False here to ensure all processes have
         # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
-        print("------------------>", [d for d in dataset])
+        logging.info("List of input files: %s", [f for f in dataset])
 
         dataset = tf.data.TFRecordDataset(
             dataset,
