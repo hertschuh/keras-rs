@@ -9,6 +9,7 @@ import keras
 import numpy as np
 from jax import numpy as jnp
 from jax.experimental import layout as jax_layout
+from jax.experimental import multihost_utils
 from jax_tpu_embedding.sparsecore.lib.nn import embedding
 from jax_tpu_embedding.sparsecore.lib.nn import embedding_spec
 from jax_tpu_embedding.sparsecore.lib.nn import (
