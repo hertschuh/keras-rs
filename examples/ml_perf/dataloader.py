@@ -171,6 +171,7 @@ class DataLoader:
         # Important to specify shuffle = False here to ensure all processes have
         # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
+        print(dataset)
 
         dataset = tf.data.TFRecordDataset(
             dataset,
