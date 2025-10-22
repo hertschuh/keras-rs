@@ -222,9 +222,10 @@ def main(
         # validation_data=eval_generator,
         epochs=epochs,
         steps_per_epoch=steps_per_epoch,
-        callbacks=[MetricLogger()],
+        # callbacks=[MetricLogger()],
         # validation_steps=training_cfg.num_eval_steps,
         # validation_freq=1,
+        verbose=0,
     )
     logger.info("Training finished")
 
