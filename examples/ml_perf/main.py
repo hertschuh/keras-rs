@@ -150,7 +150,7 @@ def main(
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
         label=ds_cfg.label,
-        steps=steps_per_epoch,
+        num_steps=steps_per_epoch,
         training=True,
     ).create_dataset(
         process_id=distribution._process_id,
@@ -166,7 +166,7 @@ def main(
             large_emb_features=large_emb_features,
             small_emb_features=small_emb_features,
             label=ds_cfg.label,
-            steps=training_cfg.num_eval_steps,
+            num_steps=training_cfg.num_eval_steps,
             training=False,
         ).create_dataset(
             process_id=distribution._process_id,
