@@ -219,12 +219,12 @@ def main(
     logger.info("Training...")
     model.fit(
         train_generator,
-        validation_data=eval_generator,
+        # validation_data=eval_generator,
         epochs=epochs,
         steps_per_epoch=steps_per_epoch,
         callbacks=[MetricLogger()],
-        validation_steps=training_cfg.num_eval_steps,
-        validation_freq=1,
+        # validation_steps=training_cfg.num_eval_steps,
+        # validation_freq=1,
     )
     logger.info("Training finished")
 
