@@ -1,8 +1,7 @@
 import argparse
 import importlib
+import logging
 import os
-
-from absl import logging
 
 os.environ["KERAS_BACKEND"] = "jax"
 
