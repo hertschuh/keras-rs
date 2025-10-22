@@ -48,8 +48,6 @@ def main(
     keras.distribution.set_distribution(distribution)
     num_processes = distribution._num_process
 
-    per_host_batch_size = global_batch_size // num_processes
-
     # === Distributed embeddings' configs for lookup features ===
     # Set XLA flags.
     os.environ["XLA_FLAGS"] = (
