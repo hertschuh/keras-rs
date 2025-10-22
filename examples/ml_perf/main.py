@@ -144,12 +144,28 @@ def main(
         num_processes=num_processes,
         shuffle_buffer=ds_cfg.get("shuffle_buffer", None),
     )
+    do_eval = False
+    if ds_cfg.val_file_pattern:
+        do_eval = True
+        eval_ds = DataLoader(
+            file_pattern=ds_cfg.val_file_pattern,
+            batch_size=training_cfg.global_batch_size,
+            file_batch_size=ds_cfg.get("file_batch_size", None),
+            dense_features=ds_cfg.dense,
+            large_emb_features=large_emb_features,
+            small_emb_features=small_emb_features,
+            label=ds_cfg.label,
+            training=False,
+        ).create_dataset(
+            process_id=distribution._process_id,
+            num_processes=num_processes,
+        )
     # For the multi-host case, the dataset has to be distributed manually.
     # See note here:
     # https://github.com/keras-team/keras-rs/blob/main/keras_rs/src/layers/embedding/base_distributed_embedding.py#L352-L363.
     if num_processes > 1:
         train_ds = distribution.distribute_dataset(train_ds)
-        # eval_ds = distribution.distribute_dataset(eval_ds)
+        eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
     def generator(dataset, training=False):
@@ -171,7 +187,8 @@ def main(
 
     logger.info("Preprocessing large embedding tables...")
     train_generator = generator(train_ds, training=True)
-    # eval_generator = generator(eval_ds, training=False)
+    if do_eval:
+        eval_generator = generator(eval_ds, training=False)
     logger.debug("Inspecting one batch of data...")
     for first_batch in train_generator:
         logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
@@ -187,10 +204,17 @@ def main(
 
     # === Training ===
     logger.info("Training...")
+    # Keras does not have a straightforward way to log at a step-level instead
+    # of epoch-level. So, we do a workaround here.
+    steps_per_epoch = training_cfg.eval_freq
+    epochs = training_cfg.num_steps // training_cfg.eval_freq
     model.fit(
         train_generator,
-        steps_per_epoch=training_cfg.num_steps,
+        validation_data=eval_generator,
+        steps_per_epoch=steps_per_epoch,
         callbacks=[MetricLogger()],
+        validation_freq=1,
+        epochs=epochs,
     )
     logger.info("Training finished")
 
