@@ -1,3 +1,4 @@
+import logging
 from typing import Any, TypeAlias
 
 import keras
@@ -6,6 +7,8 @@ from keras import ops
 import keras_rs
 
 Tensor: TypeAlias = Any
+
+logger = logging.getLogger(__name__)
 
 
 def _clone_initializer(
@@ -90,6 +93,10 @@ class DLRMDCNV2(keras.Model):
             name: The name of the layer.
         """
         super().__init__(dtype=dtype, name=name, **kwargs)
+
+        passed_args = locals()
+        logger.debug("Initialising `DLRMDCNV2` with: %s", passed_args)
+
         self.seed = seed
 
         # === Layers ====
@@ -103,12 +110,16 @@ class DLRMDCNV2(keras.Model):
             ),
             name="bottom_mlp",
         )
+        logging.debug("Initialised Bottom MLP: %s", self.bottom_mlp)
         # Distributed embeddings for large embedding tables
         self.embedding_layer = keras_rs.layers.DistributedEmbedding(
             feature_configs=large_emb_feature_configs,
             table_stacking="auto",
             dtype=dtype,
             name="embedding_layer",
+        )
+        logging.debug(
+            "Initialised `DistributedEmbedding` layer: %s", self.embedding_layer
         )
         # Embedding layers for small embedding tables
         self.small_embedding_layers = None
@@ -124,6 +135,10 @@ class DLRMDCNV2(keras.Model):
                 )
                 for i, small_emb_feature in enumerate(small_emb_features)
             ]
+            logging.debug(
+                "Initialised small embedding layers: %s",
+                self.small_embedding_layers,
+            )
         # DCN for "interactions"
         self.dcn_block = DCNBlock(
             num_layers=num_dcn_layers,
@@ -132,6 +147,7 @@ class DLRMDCNV2(keras.Model):
             dtype=dtype,
             name="dcn_block",
         )
+        logging.debug("Initialised DCN block: %s", self.dcn_block)
         # Top MLP for predictions
         self.top_mlp = keras.Sequential(
             self._get_mlp_layers(
@@ -141,6 +157,7 @@ class DLRMDCNV2(keras.Model):
             ),
             name="top_mlp",
         )
+        logging.debug("Initialised Top MLP: %s", self.top_mlp)
 
         # === Passed attributes ===
         self.large_emb_feature_configs = large_emb_feature_configs
@@ -288,6 +305,9 @@ class DCNBlock(keras.layers.Layer):
             name: The name of the layer.
         """
         super().__init__(dtype=dtype, name=name, **kwargs)
+
+        passed_args = locals()
+        logger.debug("Initialising `DCNBlock` with: %s", passed_args)
 
         # Layers
         self.layers = [

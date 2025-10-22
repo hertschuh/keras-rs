@@ -192,7 +192,7 @@ def main(
         steps_per_epoch=training_cfg.num_steps,
         callbacks=[MetricLogger()],
     )
-    logger.info("Training finished.")
+    logger.info("Training finished")
 
 
 if __name__ == "__main__":
