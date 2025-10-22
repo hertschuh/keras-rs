@@ -1,9 +1,9 @@
 import numpy as np
 import tensorflow as tf
-
 from absl import logging
 
 SEED = 1337
+
 
 class DataLoader:
     def __init__(

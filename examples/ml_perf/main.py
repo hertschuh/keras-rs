@@ -7,6 +7,7 @@ from absl import logging
 os.environ["KERAS_BACKEND"] = "jax"
 
 import keras
+
 import keras_rs
 
 from .dataloader import DataLoader
@@ -21,7 +22,6 @@ keras.config.disable_traceback_filtering()
 
 class MetricLogger(keras.callbacks.Callback):
     def on_train_batch_end(self, batch, logs=None):
-        keys = list(logs.keys())
         print("--->", logs["loss"])
 
 
@@ -168,8 +168,13 @@ def main(
     logging.debug("Inspecting one batch of data...")
     for first_batch in train_generator:
         logging.debug("Dense inputs:%s", first_batch[0]["dense_input"])
-        logging.debug("Small embedding inputs:%s", first_batch[0]["small_emb_inputs"]['cat_39_id'])
-        logging.debug("Large embedding inputs:%s", first_batch[0]["large_emb_inputs"])
+        logging.debug(
+            "Small embedding inputs:%s",
+            first_batch[0]["small_emb_inputs"]["cat_39_id"],
+        )
+        logging.debug(
+            "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
+        )
         break
     logging.info("=== Successfully preprocessed one batch of data ===")
 
