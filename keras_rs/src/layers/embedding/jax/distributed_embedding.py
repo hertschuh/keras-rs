@@ -580,18 +580,18 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         )
 
         layout = self._sparsecore_layout
-        print(f"-->{layout=}")
+        # print(f"-->{layout=}")
         mesh = layout.device_mesh.backend_mesh
-        print(f"-->{mesh=}")
+        # print(f"-->{mesh=}")
         global_device_count = mesh.devices.size
-        print(f"-->{global_device_count=}")
+        # print(f"-->{global_device_count=}")
         local_device_count = mesh.local_mesh.devices.size
-        print(f"{local_device_count=}")
+        # print(f"{local_device_count=}")
         num_sc_per_device = jte_utils.num_sparsecores_per_device(
             mesh.devices.item(0)
         )
-        print(f"-->{num_sc_per_device=}")
-        print(f"-->{jax.process_count()=}")
+        # print(f"-->{num_sc_per_device=}")
+        # print(f"-->{jax.process_count()=}")
 
         preprocessed, stats = embedding_utils.stack_and_shard_samples(
             self._config.feature_specs,
@@ -600,7 +600,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             global_device_count,
             num_sc_per_device,
         )
-        print(f"-->{stats=}")
+        # print(f"-->{stats=}")
 
         # if training:
         #     # Synchronize input statistics across all devices and update the

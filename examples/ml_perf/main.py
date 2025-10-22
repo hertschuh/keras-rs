@@ -140,9 +140,9 @@ def main(
         distribution.auto_shard_dataset = False
 
     # Print one sample.
-    for element in train_ds.take(1):
-        print(">>> train sample", element[0]["large_emb_inputs"]['cat_33_id'])
-        print(">>> train sample", element[0]["small_emb_inputs"]['cat_39_id'])
+    # for element in train_ds.take(1):
+    #     print(">>> train sample", element[0]["large_emb_inputs"]['cat_33_id'])
+    #     print(">>> train sample", element[0]["small_emb_inputs"]['cat_39_id'])
 
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses
@@ -163,10 +163,10 @@ def main(
 
     train_generator = generator(train_ds, training=True)
     # # eval_generator = generator(eval_ds, training=False)
-    for first_batch in train_generator:
-        print("------>dense", first_batch[0]["dense_input"])
-        print("-------> small", first_batch[0]["small_emb_inputs"]['cat_39_id'])
-        print("-------> large", first_batch[0]["large_emb_inputs"])
+    # for first_batch in train_generator:
+    #     print("------>dense", first_batch[0]["dense_input"])
+    #     print("-------> small", first_batch[0]["small_emb_inputs"]['cat_39_id'])
+    #     print("-------> large", first_batch[0]["large_emb_inputs"])
 
         # model(first_batch[0])
         break
