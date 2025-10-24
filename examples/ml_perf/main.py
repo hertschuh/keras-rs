@@ -225,7 +225,7 @@ def main(
         # callbacks=[MetricLogger()],
         # validation_steps=training_cfg.num_eval_steps,
         # validation_freq=1,
-        verbose=0,
+        # verbose=0,
     )
     logger.info("Training finished")
 
