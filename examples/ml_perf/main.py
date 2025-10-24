@@ -182,7 +182,8 @@ def main(
     # https://github.com/keras-team/keras-rs/blob/main/keras_rs/src/layers/embedding/base_distributed_embedding.py#L352-L363.
     if num_processes > 1:
         train_ds = distribution.distribute_dataset(train_ds)
-        eval_ds = distribution.distribute_dataset(eval_ds)
+        if do_eval:
+            eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
     def generator(dataset, training=False):
