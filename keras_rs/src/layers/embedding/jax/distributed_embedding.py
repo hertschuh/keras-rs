@@ -627,22 +627,22 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                 for stack_name, spec in stacked_table_specs.items()
             )
 
-            # Update configuration and repeat preprocessing if stats changed.
-            # if changed:
-            embedding.update_preprocessing_parameters(
-                self._config.feature_specs,
-                aggregated_stats,
-                num_sc_per_device,
-            )
+            # # Update configuration and repeat preprocessing if stats changed.
+            # # if changed:
+            # embedding.update_preprocessing_parameters(
+            #     self._config.feature_specs,
+            #     aggregated_stats,
+            #     num_sc_per_device,
+            # )
 
-            # Re-execute preprocessing with consistent input statistics.
-            preprocessed, _ = embedding_utils.stack_and_shard_samples(
-                self._config.feature_specs,
-                samples,
-                local_device_count,
-                global_device_count,
-                num_sc_per_device,
-            )
+            # # Re-execute preprocessing with consistent input statistics.
+            # preprocessed, _ = embedding_utils.stack_and_shard_samples(
+            #     self._config.feature_specs,
+            #     samples,
+            #     local_device_count,
+            #     global_device_count,
+            #     num_sc_per_device,
+            # )
 
         return {"inputs": preprocessed}
 
