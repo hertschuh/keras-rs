@@ -208,10 +208,12 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             return auto_stack_kwargs["max_unique_ids_per_partition"]
 
         if "max_ids_per_partition" in auto_stack_kwargs:
+            auto_stack_kwargs.pop("max_ids_per_partition")
             auto_stack_kwargs["stack_to_max_ids_per_partition"] = (
                 _get_max_ids_per_partition
             )
         if "max_unique_ids_per_partition" in auto_stack_kwargs:
+            auto_stack_kwargs.pop("max_unique_ids_per_partition")
             auto_stack_kwargs["stack_to_max_unique_ids_per_partition"] = (
                 _get_max_unique_ids_per_partition
             )
