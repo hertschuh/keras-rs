@@ -197,23 +197,28 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         # Pull out `auto_stack_kwargs` from `kwargs`.
         auto_stack_kwargs = kwargs.pop("auto_stack_kwargs", {})
 
+        auto_stack_max_ids_per_partition = auto_stack_kwargs.get(
+            "max_ids_per_partition", None
+        )
+        auto_stack_max_unique_ids_per_partition = auto_stack_kwargs.get(
+            "max_unique_ids_per_partition", None
+        )
+
         # For `max_ids_per_partition` and `max_unique_ids_per_partition`, JTE's
         # `auto_stack_tables` expects callables.
         def _get_max_ids_per_partition(name: str, batch_size: int) -> int:
-            return auto_stack_kwargs["max_ids_per_partition"]
+            return auto_stack_max_ids_per_partition
 
         def _get_max_unique_ids_per_partition(
             name: str, batch_size: int
         ) -> int:
-            return auto_stack_kwargs["max_unique_ids_per_partition"]
+            return auto_stack_max_ids_per_partition
 
-        if "max_ids_per_partition" in auto_stack_kwargs:
-            auto_stack_kwargs.pop("max_ids_per_partition")
+        if auto_stack_max_ids_per_partition is not None:
             auto_stack_kwargs["stack_to_max_ids_per_partition"] = (
                 _get_max_ids_per_partition
             )
         if "max_unique_ids_per_partition" in auto_stack_kwargs:
-            auto_stack_kwargs.pop("max_unique_ids_per_partition")
             auto_stack_kwargs["stack_to_max_unique_ids_per_partition"] = (
                 _get_max_unique_ids_per_partition
             )
