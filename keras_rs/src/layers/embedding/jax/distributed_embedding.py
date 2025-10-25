@@ -212,7 +212,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         def _get_max_unique_ids_per_partition(
             name: str, batch_size: int
         ) -> int:
-            return auto_stack_max_ids_per_partition
+            return auto_stack_max_unique_ids_per_partition
 
         if auto_stack_max_ids_per_partition is not None:
             auto_stack_kwargs["stack_to_max_ids_per_partition"] = (
