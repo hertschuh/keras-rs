@@ -193,6 +193,27 @@ class StackedTableInitializer(keras.initializers.Initializer):
 class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
     """JAX implementation of the TPU embedding layer."""
 
+    def __init__(self, **kwargs: Any):
+        # Pull out `auto_stack_kwargs` from `kwargs`.
+        auto_stack_kwargs = kwargs.pop("auto_stack_kwargs", {})
+        super().__init__(**kwargs)
+
+        # For `max_ids_per_partition` and `max_unique_ids_per_partition`, JTE's
+        # `auto_stack_tables` expects callables.
+
+        def _get_max_ids_per_partition(name: str, batch_size: int) -> int:
+            return auto_stack_kwargs["max_ids_per_partition"]
+
+        def _get_max_unique_ids_per_partition(name: str, batch_size: int) -> int:
+            return auto_stack_kwargs["max_unique_ids_per_partition"]
+
+        if "max_ids_per_partition" in auto_stack_kwargs:
+            auto_stack_kwargs["stack_to_max_ids_per_partition"] = _get_max_ids_per_partition
+        if "max_unique_ids_per_partition" in auto_stack_kwargs:
+            auto_stack_kwargs["stack_to_max_unique_ids_per_partition"] = _get_max_unique_ids_per_partition
+        
+        self._auto_stack_kwargs = auto_stack_kwargs
+
     def _create_sparsecore_distribution(
         self, sparsecore_axis_name: str = "sparsecore"
     ) -> tuple[
@@ -402,7 +423,10 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             if isinstance(table_stacking, str):
                 if table_stacking == "auto":
                     jte_table_stacking.auto_stack_tables(
-                        feature_specs, global_device_count, num_sc_per_device
+                        feature_specs,
+                        global_device_count,
+                        num_sc_per_device,
+                        **self._auto_stack_kwargs,
                     )
                 else:
                     raise ValueError(
