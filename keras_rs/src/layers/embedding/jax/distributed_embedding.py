@@ -596,15 +596,15 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             num_sc_per_device,
         )
 
-        # if training:
-        #     # Synchronize input statistics across all devices and update the
-        #     # underlying stacked tables specs in the feature specs.
+        if training:
+            # Synchronize input statistics across all devices and update the
+            # underlying stacked tables specs in the feature specs.
 
-        #     # Aggregate stats across all processes/devices via pmax.
-        #     all_stats = multihost_utils.process_allgather(stats)
-        #     aggregated_stats = jax.tree.map(
-        #         lambda x: jnp.max(x, axis=0), all_stats
-        #     )
+            # Aggregate stats across all processes/devices via pmax.
+            all_stats = multihost_utils.process_allgather(stats)
+            aggregated_stats = jax.tree.map(
+                lambda x: jnp.max(x, axis=0), all_stats
+            )
 
         #     # Check if stats changed enough to warrant action.
         #     stacked_table_specs = embedding.get_stacked_table_specs(
