@@ -204,14 +204,20 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         def _get_max_ids_per_partition(name: str, batch_size: int) -> int:
             return auto_stack_kwargs["max_ids_per_partition"]
 
-        def _get_max_unique_ids_per_partition(name: str, batch_size: int) -> int:
+        def _get_max_unique_ids_per_partition(
+            name: str, batch_size: int
+        ) -> int:
             return auto_stack_kwargs["max_unique_ids_per_partition"]
 
         if "max_ids_per_partition" in auto_stack_kwargs:
-            auto_stack_kwargs["stack_to_max_ids_per_partition"] = _get_max_ids_per_partition
+            auto_stack_kwargs["stack_to_max_ids_per_partition"] = (
+                _get_max_ids_per_partition
+            )
         if "max_unique_ids_per_partition" in auto_stack_kwargs:
-            auto_stack_kwargs["stack_to_max_unique_ids_per_partition"] = _get_max_unique_ids_per_partition
-        
+            auto_stack_kwargs["stack_to_max_unique_ids_per_partition"] = (
+                _get_max_unique_ids_per_partition
+            )
+
         self._auto_stack_kwargs = auto_stack_kwargs
 
     def _create_sparsecore_distribution(

@@ -116,8 +116,10 @@ def main(
         num_dcn_layers=model_cfg.num_dcn_layers,
         dcn_projection_dim=model_cfg.dcn_projection_dim,
         auto_stack_kwargs={
-            "max_ids_per_partition": max_ids_per_partition,
-            "max_unique_ids_per_partition": max_unique_ids_per_partition
+            "max_ids_per_partition": model_cfg.max_ids_per_partition,
+            "max_unique_ids_per_partition": (
+                model_cfg.max_unique_ids_per_partition
+            ),
         },
         seed=SEED,
         dtype="float32",

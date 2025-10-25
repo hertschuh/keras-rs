@@ -169,7 +169,7 @@ class DLRMDCNV2(keras.Model):
         self.top_mlp_dims = top_mlp_dims
         self.num_dcn_layers = num_dcn_layers
         self.dcn_projection_dim = dcn_projection_dim
-        self.auto_stack_tables = auto_stack_kwargs
+        self.auto_stack_kwargs = auto_stack_kwargs
 
     def call(self, inputs: dict[str, Tensor]) -> Tensor:
         """Forward pass of the model.
@@ -276,7 +276,7 @@ class DLRMDCNV2(keras.Model):
                 "top_mlp_dims": self.top_mlp_dims,
                 "num_dcn_layers": self.num_dcn_layers,
                 "dcn_projection_dim": self.dcn_projection_dim,
-                "auto_stack_kwargs": auto_stack_kwargs,
+                "auto_stack_kwargs": self.auto_stack_kwargs,
                 "seed": self.seed,
             }
         )
