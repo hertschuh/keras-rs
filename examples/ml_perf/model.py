@@ -49,6 +49,7 @@ class DLRMDCNV2(keras.Model):
         top_mlp_dims: list[int],
         num_dcn_layers: int,
         dcn_projection_dim: int,
+        auto_stack_kwargs: dict[str, Any],
         seed: int | keras.random.SeedGenerator | None = None,
         dtype: str | None = None,
         name: str | None = None,
@@ -115,6 +116,7 @@ class DLRMDCNV2(keras.Model):
         self.embedding_layer = keras_rs.layers.DistributedEmbedding(
             feature_configs=large_emb_feature_configs,
             table_stacking="auto",
+            auto_stack_kwargs=auto_stack_kwargs,
             dtype=dtype,
             name="embedding_layer",
         )
@@ -167,6 +169,7 @@ class DLRMDCNV2(keras.Model):
         self.top_mlp_dims = top_mlp_dims
         self.num_dcn_layers = num_dcn_layers
         self.dcn_projection_dim = dcn_projection_dim
+        self.auto_stack_tables = auto_stack_kwargs
 
     def call(self, inputs: dict[str, Tensor]) -> Tensor:
         """Forward pass of the model.
@@ -273,6 +276,7 @@ class DLRMDCNV2(keras.Model):
                 "top_mlp_dims": self.top_mlp_dims,
                 "num_dcn_layers": self.num_dcn_layers,
                 "dcn_projection_dim": self.dcn_projection_dim,
+                "auto_stack_kwargs": auto_stack_kwargs,
                 "seed": self.seed,
             }
         )
