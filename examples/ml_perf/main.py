@@ -152,6 +152,7 @@ def main(
     steps_per_epoch = training_cfg.num_steps
     epochs = 2
     do_eval = False
+    print(f"{steps_per_epoch=}, {epochs=}, {do_eval=}")
 
     train_ds = DataLoader(
         file_pattern=ds_cfg.file_pattern,
