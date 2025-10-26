@@ -196,7 +196,6 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
     def __init__(self, **kwargs: Any):
         # Pull out `auto_stack_kwargs` from `kwargs`.
         auto_stack_kwargs = kwargs.pop("auto_stack_kwargs", {})
-        print(f"{auto_stack_kwargs=}")
 
         auto_stack_max_ids_per_partition = auto_stack_kwargs.pop(
             "max_ids_per_partition", None
@@ -225,7 +224,6 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             )
 
         self._auto_stack_kwargs = auto_stack_kwargs
-        print(f"-------> {self._auto_stack_kwargs=}")
         super().__init__(**kwargs)
 
     def _create_sparsecore_distribution(
@@ -675,14 +673,14 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                     num_sc_per_device,
                 )
 
-                # Re-execute preprocessing with consistent input statistics.
-                preprocessed, _ = embedding_utils.stack_and_shard_samples(
-                    self._config.feature_specs,
-                    samples,
-                    local_device_count,
-                    global_device_count,
-                    num_sc_per_device,
-                )
+                # # Re-execute preprocessing with consistent input statistics.
+                # preprocessed, _ = embedding_utils.stack_and_shard_samples(
+                #     self._config.feature_specs,
+                #     samples,
+                #     local_device_count,
+                #     global_device_count,
+                #     num_sc_per_device,
+                # )
 
         return {"inputs": preprocessed}
 
