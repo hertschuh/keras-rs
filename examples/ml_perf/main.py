@@ -159,7 +159,7 @@ def main(
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
         label=ds_cfg.label,
-        num_steps=steps_per_epoch + 2000,
+        num_steps=steps_per_epoch,
         training=True,
     ).create_dataset(
         process_id=distribution._process_id,
