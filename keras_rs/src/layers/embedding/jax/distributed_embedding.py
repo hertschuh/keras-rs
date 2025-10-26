@@ -196,6 +196,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
     def __init__(self, **kwargs: Any):
         # Pull out `auto_stack_kwargs` from `kwargs`.
         auto_stack_kwargs = kwargs.pop("auto_stack_kwargs", {})
+        print(f"{auto_stack_kwargs=}")
 
         auto_stack_max_ids_per_partition = auto_stack_kwargs.pop(
             "max_ids_per_partition", None
