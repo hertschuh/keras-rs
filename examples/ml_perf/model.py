@@ -200,6 +200,7 @@ class DLRMDCNV2(keras.Model):
                 # jax.debug.print("embedding layer: {}", embedding_layer)
                 jax.debug.print("small_embeddings input {}", jnp.any(jnp.isnan(small_emb_input)))
                 embedding = embedding_layer(small_emb_input)
+                jax.debug.print("small_embeddings input max {}", jnp.max(small_emb_input))
                 jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
                 embedding = ops.sum(embedding, axis=-2)
                 jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
