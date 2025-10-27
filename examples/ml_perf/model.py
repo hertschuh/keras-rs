@@ -133,7 +133,7 @@ class DLRMDCNV2(keras.Model):
                 name = small_emb_feature["name"]
                 new_name = small_emb_feature["new_name"]
                 vocabulary_size = small_emb_feature["vocabulary_size"]
-                self.small_embedding_layers[new_name] = (
+                self.small_embedding_layers[f"{new_name}_id"] = (
                     keras.layers.Embedding(
                         input_dim=vocabulary_size,
                         output_dim=embedding_dim,
@@ -199,30 +199,14 @@ class DLRMDCNV2(keras.Model):
             small_emb_inputs = inputs["small_emb_inputs"]
             for small_emb_feature in small_emb_inputs.keys():
                 small_emb_input = small_emb_inputs[small_emb_feature]
-            #     embedding_layer = self.small_embedding_layers[small_emb_feature]
+                embedding_layer = self.small_embedding_layers[small_emb_feature]
 
-            #     embedding = embedding_layer(small_emb_input)
-            #     embedding = ops.sum(embedding, axis=-2)
+                embedding = embedding_layer(small_emb_input)
+                embedding = ops.sum(embedding, axis=-2)
 
-            #     small_embeddings.append(embedding)
+                small_embeddings.append(embedding)
             
-            # small_embeddings = ops.concatenate(small_embeddings, axis=-1)
-
-        #     for small_emb_input, embedding_layer in zip(
-        #         small_emb_inputs.values(), self.small_embedding_layers
-        #     ):
-        #         # jax.debug.print("embedding layer: {}", embedding_layer)
-        #         jax.debug.print("small_embeddings input {}", jnp.any(jnp.isnan(small_emb_input)))
-        #         embedding = embedding_layer(small_emb_input)
-        #         jax.debug.print("small_embeddings input max {}", jnp.max(small_emb_input))
-        #         jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
-        #         embedding = ops.sum(embedding, axis=-2)
-        #         jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
-        #         small_embeddings.append(embedding)
-
-        #     small_embeddings = ops.concatenate(small_embeddings, axis=-1)
-
-        # jax.debug.print("small_embeddings {}", jnp.any(jnp.isnan(small_embeddings)))
+            small_embeddings = ops.concatenate(small_embeddings, axis=-1)
 
         # Interaction
         to_concatenate = [dense_output, *large_embeddings.values()]
