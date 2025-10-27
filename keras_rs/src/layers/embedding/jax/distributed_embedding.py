@@ -412,6 +412,8 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         feature_specs = config_conversion.keras_to_jte_feature_configs(
             self._sc_feature_configs
         )
+        print(f"--->{self._sc_feature_configs=}")
+        print(f"--->{feature_specs=}")
 
         # Distribution for sparsecore operations.
         sparsecore_distribution, sparsecore_layout = (
