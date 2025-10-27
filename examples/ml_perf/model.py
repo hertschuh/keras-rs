@@ -187,7 +187,7 @@ class DLRMDCNV2(keras.Model):
         dense_output = self.bottom_mlp(dense_input)
         jax.debug.print("dense_output {}", jnp.any(jnp.isnan(dense_output)))
         large_embeddings = self.embedding_layer(large_emb_inputs)
-        jax.debug.print("large_embeddings {}", jnp.any(jnp.isnan(large_embeddings)))
+        jax.debug.print("large_embeddings {}", [jnp.any(jnp.isnan(large_emb)) for large_emb in large_embeddings.values()])
         small_embeddings = None
         if self.small_emb_features:
             small_embeddings = []
