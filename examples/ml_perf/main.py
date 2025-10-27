@@ -225,7 +225,7 @@ def main(
         for k in first_batch[0]["large_emb_inputs"]:
             logger.info(
                 "Large embedding inputs:%s %s",
-                k, first_batch[0]["large_emb_inputs"][k].shape,
+                k, first_batch[0]["large_emb_inputs"][k],
             )
         break
 
