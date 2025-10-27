@@ -190,6 +190,7 @@ class DataLoader:
         # Important to specify shuffle = False here to ensure all processes have
         # the same order.
         dataset = tf.data.Dataset.list_files(self.file_pattern, shuffle=False)
+        dataset = dataset.shard(num_shards=process_count, index=process_index)
         logger.info("List of input files: %s", [f for f in dataset])
 
         dataset = tf.data.TFRecordDataset(
@@ -213,7 +214,7 @@ class DataLoader:
             dataset = dataset.shuffle(shuffle_buffer, seed=SEED)
 
         dataset = dataset.batch(
-            self.batch_size,
+            self.batch_size // num_processes,
             drop_remainder=True,
             num_parallel_calls=tf.data.AUTOTUNE,
         )
