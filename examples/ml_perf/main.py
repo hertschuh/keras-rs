@@ -15,9 +15,6 @@ from .model import DLRMDCNV2
 # Set random seed.
 SEED = 1337
 
-# import jax
-# jax.config.update("jax_debug_nans", True)
-
 logger = logging.getLogger(__name__)
 
 keras.utils.set_random_seed(SEED)
@@ -140,7 +137,6 @@ def main(
     # === Load dataset ===
     logger.info("Loading dataset...")
 
-
     # Keras does not have a straightforward way to log at a step-level instead
     # of epoch-level. So, we do a workaround here.
     # if ds_cfg.val_file_pattern:
@@ -196,7 +192,6 @@ def main(
         if do_eval:
             eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
-
 
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses

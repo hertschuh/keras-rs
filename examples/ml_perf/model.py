@@ -5,8 +5,6 @@ import keras
 from keras import ops
 
 import keras_rs
-import jax
-import jax.numpy as jnp
 
 Tensor: TypeAlias = Any
 
