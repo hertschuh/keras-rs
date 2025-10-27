@@ -128,6 +128,7 @@ class DLRMDCNV2(keras.Model):
         # Embedding layers for small embedding tables
         self.small_embedding_layers = None
         if small_emb_features:
+            print(f"{small_emb_features=}")
             self.small_embedding_layers = [
                 keras.layers.Embedding(
                     input_dim=small_emb_feature["vocabulary_size"],
