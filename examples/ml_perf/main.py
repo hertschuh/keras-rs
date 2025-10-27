@@ -194,6 +194,20 @@ def main(
             eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
+    for first_batch in train_ds.take(1):
+        logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
+        for k in first_batch[0]["small_emb_inputs"]:
+            logger.info(
+                "Small embedding inputs:%s %s",
+                k, first_batch[0]["small_emb_inputs"][k].shape,
+            )
+        for k in first_batch[0]["large_emb_inputs"]:
+            logger.info(
+                "Large embedding inputs:%s %s",
+                k, first_batch[0]["large_emb_inputs"][k].shape,
+            )
+        break
+
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses
         large embedding features.
@@ -215,19 +229,19 @@ def main(
     train_generator = generator(train_ds, training=True)
     if do_eval:
         eval_generator = generator(eval_ds, training=False)
-    for first_batch in train_generator:
-        logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
-        for k in first_batch[0]["small_emb_inputs"]:
-            logger.info(
-                "Small embedding inputs:%s %s",
-                k, first_batch[0]["small_emb_inputs"][k].shape,
-            )
-        for k in first_batch[0]["large_emb_inputs"]:
-            logger.info(
-                "Large embedding inputs:%s %s",
-                k, first_batch[0]["large_emb_inputs"][k],
-            )
-        break
+    # for first_batch in train_generator:
+    #     logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
+    #     for k in first_batch[0]["small_emb_inputs"]:
+    #         logger.info(
+    #             "Small embedding inputs:%s %s",
+    #             k, first_batch[0]["small_emb_inputs"][k].shape,
+    #         )
+    #     for k in first_batch[0]["large_emb_inputs"]:
+    #         logger.info(
+    #             "Large embedding inputs:%s %s",
+    #             k, first_batch[0]["large_emb_inputs"][k],
+    #         )
+    #     break
 
     # logger.debug("Inspecting one batch of data...")
     # for first_batch in train_generator:
