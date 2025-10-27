@@ -185,7 +185,7 @@ class DLRMDCNV2(keras.Model):
 
         # Embed features.
         dense_output = self.bottom_mlp(dense_input)
-        jax.debug.print("dense_output {}", dense_output.shape)
+        jax.debug.print("dense_output {}", dense_output)
         large_embeddings = self.embedding_layer(large_emb_inputs)
         jax.debug.print("large_embeddings {}", large_embeddings)
         small_embeddings = None
