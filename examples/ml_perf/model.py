@@ -198,7 +198,9 @@ class DLRMDCNV2(keras.Model):
                 small_emb_inputs.values(), self.small_embedding_layers
             ):
                 embedding = embedding_layer(small_emb_input)
+                jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
                 embedding = ops.sum(embedding, axis=-2)
+                jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
                 small_embeddings.append(embedding)
 
             small_embeddings = ops.concatenate(small_embeddings, axis=-1)
