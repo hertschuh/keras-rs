@@ -64,10 +64,12 @@ def main(
     logger.debug("Small Embedding Features: %s", small_emb_features)
 
     feature_configs = {}
+    print("--->", large_emb_features)
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
         vocabulary_size = large_emb_feature["vocabulary_size"]
         feature_list_length = large_emb_feature["feature_list_length"]
+        print("bruh:", feature_name, vocabulary_size, feature_list_length)
 
         table_config = keras_rs.layers.TableConfig(
             name=f"{feature_name}_table",
