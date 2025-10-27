@@ -215,17 +215,17 @@ def main(
     if do_eval:
         eval_generator = generator(eval_ds, training=False)
 
-    logger.debug("Inspecting one batch of data...")
-    for first_batch in train_generator:
-        logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
-        logger.debug(
-            "Small embedding inputs:%s",
-            first_batch[0]["small_emb_inputs"]["25_id"],
-        )
-        logger.debug(
-            "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
-        )
-        break
+    # logger.debug("Inspecting one batch of data...")
+    # for first_batch in train_generator:
+    #     logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
+    #     logger.debug(
+    #         "Small embedding inputs:%s",
+    #         first_batch[0]["small_emb_inputs"]["25_id"],
+    #     )
+    #     logger.debug(
+    #         "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
+    #     )
+    #     break
     logger.info("Successfully preprocessed one batch of data")
 
     # === Training ===
