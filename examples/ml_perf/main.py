@@ -70,7 +70,7 @@ def main(
         feature_list_length = large_emb_feature["feature_list_length"]
 
         table_config = keras_rs.layers.TableConfig(
-            name=f"{feature_name}_table",
+            name=feature_name,
             vocabulary_size=vocabulary_size,
             embedding_dim=model_cfg.embedding_dim,
             # TODO(abheesht): Verify.
