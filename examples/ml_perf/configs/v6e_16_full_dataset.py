@@ -26,12 +26,12 @@ dataset_config.lookup = [
         "feature_list_length": 3,
         "new_name": "cat_0",
     },
-    # {
-    #     "name": "categorical-feature-15",
-    #     "vocabulary_size": 39060,
-    #     "feature_list_length": 2,
-    #     "new_name": "cat_1",
-    # },
+    {
+        "name": "categorical-feature-15",
+        "vocabulary_size": 39060,
+        "feature_list_length": 2,
+        "new_name": "cat_1",
+    },
     # {
     #     "name": "categorical-feature-16",
     #     "vocabulary_size": 17295,
