@@ -139,7 +139,7 @@ class DLRMDCNV2(keras.Model):
                 )
                 for i, small_emb_feature in enumerate(small_emb_features)
             ]
-            logging.debug(
+            logging.info(
                 "Initialised small embedding layers: %s",
                 self.small_embedding_layers,
             )
