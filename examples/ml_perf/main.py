@@ -103,6 +103,7 @@ def main(
                 model_cfg.embedding_dim,
             ),
         )
+    print("bruh:", feature_configs)
 
     # === Instantiate model ===
     # We instantiate the model first, because we need to preprocess large
