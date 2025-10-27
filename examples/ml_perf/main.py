@@ -20,6 +20,89 @@ logger = logging.getLogger(__name__)
 keras.utils.set_random_seed(SEED)
 keras.config.disable_traceback_filtering()
 
+from typing import Any, Callable, List, Mapping
+from jax_tpu_embedding.sparsecore.lib.flax import embed
+from jax_tpu_embedding.sparsecore.lib.flax import embed_optimizer
+from jax_tpu_embedding.sparsecore.lib.nn import embedding
+from jax_tpu_embedding.sparsecore.lib.nn import embedding_spec
+
+import jax
+import jax.numpy as jnp
+
+_EMBEDDING_THRESHOLD = 21_000
+_LEARNING_RATE = 0.034
+_MAX_IDS_PER_PARTITION = 8192
+_MAX_UNIQUE_IDS_PER_PARTITION = 4096
+_EMBEDDING_SIZE = 128
+_BATCH_SIZE = 16896
+
+
+VOCAB_SIZES = [
+    40000000, 39060, 17295, 7424, 20265, 3, 7122, 1543, 63, 40000000,
+    3067956, 405282, 10, 2209, 11938, 155, 4, 976, 14, 40000000, 40000000,
+    40000000, 590152, 12973, 108, 36
+]
+
+from typing import Any, Callable, List, Mapping
+from jax_tpu_embedding.sparsecore.lib.flax import embed
+from jax_tpu_embedding.sparsecore.lib.flax import embed_optimizer
+from jax_tpu_embedding.sparsecore.lib.nn import embedding
+from jax_tpu_embedding.sparsecore.lib.nn import embedding_spec
+
+import jax
+import jax.numpy as jnp
+
+
+def uniform_init(bound: float):
+  def init(key, shape, dtype=jnp.float_):
+    return jax.random.uniform(
+        key,
+        shape=shape,
+        dtype=dtype,
+        minval=-bound,
+        maxval=bound
+    )
+  return init
+
+
+def create_feature_specs(
+    vocab_sizes: List[int],
+) -> tuple[
+    Mapping[str, embedding_spec.TableSpec],
+    Mapping[str, embedding_spec.FeatureSpec],
+]:
+  """Creates the feature specs for the DLRM model."""
+  table_specs = {}
+  feature_specs = {}
+  for i, vocab_size in enumerate(vocab_sizes):
+    if vocab_size <= _EMBEDDING_THRESHOLD:
+      continue
+
+    table_name = f"{i}"
+    feature_name = f"{i}"
+    bound = jnp.sqrt(1.0 / vocab_size)
+    table_spec = embedding_spec.TableSpec(
+        vocabulary_size=vocab_size,
+        embedding_dim=_EMBEDDING_SIZE,
+        initializer=uniform_init(bound),
+        optimizer=embedding_spec.AdagradOptimizerSpec(
+            learning_rate=_LEARNING_RATE
+        ),
+        combiner="sum",
+        name=table_name,
+        max_ids_per_partition=_MAX_IDS_PER_PARTITION,
+        max_unique_ids_per_partition=_MAX_UNIQUE_IDS_PER_PARTITION,
+    )
+    feature_spec = embedding_spec.FeatureSpec(
+        table_spec=table_spec,
+        input_shape=(_BATCH_SIZE, 1),
+        output_shape=(_BATCH_SIZE, _EMBEDDING_SIZE),
+        name=feature_name,
+    )
+    feature_specs[feature_name] = feature_spec
+    table_specs[table_name] = table_spec
+  return table_specs, feature_specs
+
 
 class MetricLogger(keras.callbacks.Callback):
     def on_train_batch_end(self, batch, logs=None):
@@ -271,10 +354,29 @@ if __name__ == "__main__":
     model_cfg = config["model"]
     training_cfg = config["training"]
 
-    main(
-        ds_cfg=ds_cfg,
-        model_cfg=model_cfg,
-        training_cfg=training_cfg,
+    _, feature_spec = create_feature_specs(
+        vocab_sizes=vocab_sizes
+    )
+    print("feature_spec:", feature_spec)
+
+    # main(
+    #     ds_cfg=ds_cfg,
+    #     model_cfg=model_cfg,
+    #     training_cfg=training_cfg,
+    # )
+
+    def _get_max_ids_per_partition(name: str, batch_size: int) -> int:
+        return _MAX_IDS_PER_PARTITION
+
+    def _get_max_unique_ids_per_partition(name: str, batch_size: int) -> int:
+        return _MAX_UNIQUE_IDS_PER_PARTITION
+
+    embedding.auto_stack_tables(
+        feature_spec,
+        global_device_count=jax.device_count(),
+        stack_to_max_ids_per_partition=_get_max_ids_per_partition,
+        stack_to_max_unique_ids_per_partition=_get_max_unique_ids_per_partition,
+        num_sc_per_device=2,
     )
 
     logger.info("Train script finished")
