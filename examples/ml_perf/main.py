@@ -140,14 +140,17 @@ def main(
 
     # Keras does not have a straightforward way to log at a step-level instead
     # of epoch-level. So, we do a workaround here.
-    if ds_cfg.val_file_pattern:
-        steps_per_epoch = training_cfg.eval_freq
-        epochs = training_cfg.num_steps // training_cfg.eval_freq
-        do_eval = True
-    else:
-        steps_per_epoch = training_cfg.num_steps
-        epochs = 1
-        do_eval = False
+    # if ds_cfg.val_file_pattern:
+    #     steps_per_epoch = training_cfg.eval_freq
+    #     epochs = training_cfg.num_steps // training_cfg.eval_freq
+    #     do_eval = True
+    # else:
+    #     steps_per_epoch = training_cfg.num_steps
+    #     epochs = 1
+    #     do_eval = False
+    steps_per_epoch = training_cfg.num_steps
+    epochs = 2
+    do_eval = False
 
     logger.info(f"{steps_per_epoch=}, {epochs=}, {do_eval=}")
 
@@ -159,7 +162,7 @@ def main(
         large_emb_features=large_emb_features,
         small_emb_features=small_emb_features,
         label=ds_cfg.label,
-        num_steps=steps_per_epoch,
+        num_steps=steps_per_epoch + 20,
         training=True,
     ).create_dataset(
         process_id=distribution._process_id,
