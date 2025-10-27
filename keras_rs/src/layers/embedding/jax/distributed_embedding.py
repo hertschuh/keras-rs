@@ -641,7 +641,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             # print("### all_stats", all_stats)
             # aggregated_stats = all_stats
             aggregated_stats = jax.tree.map(
-                lambda x: jnp.max(x, axis=0), all_stats
+                lambda x: np.max(x, axis=0), all_stats
             )
 
             # Check if stats changed enough to warrant action.
