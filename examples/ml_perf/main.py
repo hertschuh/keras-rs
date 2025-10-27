@@ -220,7 +220,7 @@ def main(
         logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
         logger.debug(
             "Small embedding inputs:%s",
-            first_batch[0]["small_emb_inputs"]["39_id"],
+            first_batch[0]["small_emb_inputs"]["25_id"],
         )
         logger.debug(
             "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
