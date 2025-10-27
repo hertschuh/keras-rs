@@ -197,7 +197,7 @@ class DLRMDCNV2(keras.Model):
             for small_emb_input, embedding_layer in zip(
                 small_emb_inputs.values(), self.small_embedding_layers
             ):
-                jax.debug.print("embedding layer: {}", embedding_layer)
+                # jax.debug.print("embedding layer: {}", embedding_layer)
                 jax.debug.print("small_embeddings input {}", jnp.any(jnp.isnan(small_emb_input)))
                 embedding = embedding_layer(small_emb_input)
                 jax.debug.print("small_embeddings embedding {}", jnp.any(jnp.isnan(embedding)))
