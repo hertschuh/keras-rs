@@ -185,8 +185,9 @@ class DLRMDCNV2(keras.Model):
 
         # Embed features.
         dense_output = self.bottom_mlp(dense_input)
-        # jax.debug.print("dense_ouput {}", dense_output.shape)
+        jax.debug.print("dense_output {}", dense_output.shape)
         large_embeddings = self.embedding_layer(large_emb_inputs)
+        jax.debug.print("large_embeddings {}", large_embeddings)
         small_embeddings = None
         if self.small_emb_features:
             small_embeddings = []
@@ -199,6 +200,8 @@ class DLRMDCNV2(keras.Model):
                 small_embeddings.append(embedding)
 
             small_embeddings = ops.concatenate(small_embeddings, axis=-1)
+
+        jax.debug.print("small_emebddings {}", small_embeddings)
 
         # Interaction
         to_concatenate = [dense_output, *large_embeddings.values()]
