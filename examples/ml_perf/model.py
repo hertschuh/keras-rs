@@ -143,7 +143,7 @@ class DLRMDCNV2(keras.Model):
                         name=f"small_embedding_layer_{new_name}",
                     )
                 )
-            logging.info(
+            logging.debug(
                 "Initialised small embedding layers: %s",
                 self.small_embedding_layers,
             )
@@ -190,9 +190,7 @@ class DLRMDCNV2(keras.Model):
 
         # Embed features.
         dense_output = self.bottom_mlp(dense_input)
-        jax.debug.print("dense_output {}", jnp.any(jnp.isnan(dense_output)))
         large_embeddings = self.embedding_layer(large_emb_inputs)
-        jax.debug.print("large_embeddings {}", [jnp.any(jnp.isnan(large_emb)) for large_emb in large_embeddings.values()])
         small_embeddings = None
         if self.small_emb_features:
             small_embeddings = []
@@ -200,12 +198,9 @@ class DLRMDCNV2(keras.Model):
             for small_emb_feature in small_emb_inputs.keys():
                 small_emb_input = small_emb_inputs[small_emb_feature]
                 embedding_layer = self.small_embedding_layers[small_emb_feature]
-
                 embedding = embedding_layer(small_emb_input)
                 embedding = ops.sum(embedding, axis=-2)
-
                 small_embeddings.append(embedding)
-            
             small_embeddings = ops.concatenate(small_embeddings, axis=-1)
 
         # Interaction
@@ -217,7 +212,6 @@ class DLRMDCNV2(keras.Model):
 
         # Predictions
         outputs = self.top_mlp(x)
-        jax.debug.print("outputs --------> {}", jnp.any(jnp.isnan(outputs)))
         return outputs
 
     def _get_mlp_layers(

@@ -67,12 +67,10 @@ def main(
     logger.debug("Small Embedding Features: %s", small_emb_features)
 
     feature_configs = {}
-    print("--->", large_emb_features)
     for large_emb_feature in large_emb_features:
         feature_name = large_emb_feature["new_name"]
         vocabulary_size = large_emb_feature["vocabulary_size"]
         feature_list_length = large_emb_feature["feature_list_length"]
-        print("bruh:", feature_name, vocabulary_size, feature_list_length)
 
         table_config = keras_rs.layers.TableConfig(
             name=f"{feature_name}_table",
@@ -106,7 +104,6 @@ def main(
                 model_cfg.embedding_dim,
             ),
         )
-    print("bruh:", feature_configs)
 
     # === Instantiate model ===
     # We instantiate the model first, because we need to preprocess large
@@ -200,19 +197,6 @@ def main(
             eval_ds = distribution.distribute_dataset(eval_ds)
         distribution.auto_shard_dataset = False
 
-    for first_batch in train_ds.take(1):
-        logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
-        for k in first_batch[0]["small_emb_inputs"]:
-            logger.info(
-                "Small embedding inputs:%s %s",
-                k, first_batch[0]["small_emb_inputs"][k].shape,
-            )
-        for k in first_batch[0]["large_emb_inputs"]:
-            logger.info(
-                "Large embedding inputs:%s %s",
-                k, first_batch[0]["large_emb_inputs"][k].shape,
-            )
-        break
 
     def generator(dataset, training=False):
         """Converts tf.data Dataset to a Python generator and preprocesses
@@ -235,31 +219,18 @@ def main(
     train_generator = generator(train_ds, training=True)
     if do_eval:
         eval_generator = generator(eval_ds, training=False)
-    # for first_batch in train_generator:
-    #     logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
-    #     for k in first_batch[0]["small_emb_inputs"]:
-    #         logger.info(
-    #             "Small embedding inputs:%s %s",
-    #             k, first_batch[0]["small_emb_inputs"][k].shape,
-    #         )
-    #     for k in first_batch[0]["large_emb_inputs"]:
-    #         logger.info(
-    #             "Large embedding inputs:%s %s",
-    #             k, first_batch[0]["large_emb_inputs"][k],
-    #         )
-    #     break
 
-    # logger.debug("Inspecting one batch of data...")
-    # for first_batch in train_generator:
-    #     logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
-    #     logger.debug(
-    #         "Small embedding inputs:%s",
-    #         first_batch[0]["small_emb_inputs"]["25_id"],
-    #     )
-    #     logger.debug(
-    #         "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
-    #     )
-    #     break
+    logger.debug("Inspecting one batch of data...")
+    for first_batch in train_generator:
+        logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
+        logger.debug(
+            "Small embedding inputs:%s",
+            first_batch[0]["small_emb_inputs"]["25_id"],
+        )
+        logger.debug(
+            "Large embedding inputs:%s", first_batch[0]["large_emb_inputs"]
+        )
+        break
     logger.info("Successfully preprocessed one batch of data")
 
     # === Training ===
