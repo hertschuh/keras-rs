@@ -199,14 +199,14 @@ class DLRMDCNV2(keras.Model):
             small_emb_inputs = inputs["small_emb_inputs"]
             for small_emb_feature in small_emb_inputs.keys():
                 small_emb_input = small_emb_inputs[small_emb_feature]
-                embedding_layer = self.small_embedding_layers[small_emb_feature]
+            #     embedding_layer = self.small_embedding_layers[small_emb_feature]
 
-                embedding = embedding_layer(small_emb_input)
-                embedding = ops.sum(embedding, axis=-2)
+            #     embedding = embedding_layer(small_emb_input)
+            #     embedding = ops.sum(embedding, axis=-2)
 
-                small_embeddings.append(embedding)
+            #     small_embeddings.append(embedding)
             
-            small_embeddings = ops.concatenate(small_embeddings, axis=-1)
+            # small_embeddings = ops.concatenate(small_embeddings, axis=-1)
 
         #     for small_emb_input, embedding_layer in zip(
         #         small_emb_inputs.values(), self.small_embedding_layers
