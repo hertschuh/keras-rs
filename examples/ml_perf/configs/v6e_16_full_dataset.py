@@ -92,48 +92,48 @@ dataset_config.lookup = [
     #     "feature_list_length": 8,
     #     "new_name": "cat_11",
     # },
-    # {
-    #     "name": "categorical-feature-26",
-    #     "vocabulary_size": 10,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_12",
-    # },
-    # {
-    #     "name": "categorical-feature-27",
-    #     "vocabulary_size": 2209,
-    #     "feature_list_length": 6,
-    #     "new_name": "cat_13",
-    # },
-    # {
-    #     "name": "categorical-feature-28",
-    #     "vocabulary_size": 11938,
-    #     "feature_list_length": 9,
-    #     "new_name": "cat_14",
-    # },
-    # {
-    #     "name": "categorical-feature-29",
-    #     "vocabulary_size": 155,
-    #     "feature_list_length": 5,
-    #     "new_name": "cat_15",
-    # },
-    # {
-    #     "name": "categorical-feature-30",
-    #     "vocabulary_size": 4,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_16",
-    # },
-    # {
-    #     "name": "categorical-feature-31",
-    #     "vocabulary_size": 976,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_17",
-    # },
-    # {
-    #     "name": "categorical-feature-32",
-    #     "vocabulary_size": 14,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_18",
-    # },
+    {
+        "name": "categorical-feature-26",
+        "vocabulary_size": 10,
+        "feature_list_length": 1,
+        "new_name": "cat_12",
+    },
+    {
+        "name": "categorical-feature-27",
+        "vocabulary_size": 2209,
+        "feature_list_length": 6,
+        "new_name": "cat_13",
+    },
+    {
+        "name": "categorical-feature-28",
+        "vocabulary_size": 11938,
+        "feature_list_length": 9,
+        "new_name": "cat_14",
+    },
+    {
+        "name": "categorical-feature-29",
+        "vocabulary_size": 155,
+        "feature_list_length": 5,
+        "new_name": "cat_15",
+    },
+    {
+        "name": "categorical-feature-30",
+        "vocabulary_size": 4,
+        "feature_list_length": 1,
+        "new_name": "cat_16",
+    },
+    {
+        "name": "categorical-feature-31",
+        "vocabulary_size": 976,
+        "feature_list_length": 1,
+        "new_name": "cat_17",
+    },
+    {
+        "name": "categorical-feature-32",
+        "vocabulary_size": 14,
+        "feature_list_length": 1,
+        "new_name": "cat_18",
+    },
     # {
     #     "name": "categorical-feature-33",
     #     "vocabulary_size": 40000000,
@@ -158,24 +158,24 @@ dataset_config.lookup = [
     #     "feature_list_length": 10,
     #     "new_name": "cat_22",
     # },
-    # {
-    #     "name": "categorical-feature-37",
-    #     "vocabulary_size": 12973,
-    #     "feature_list_length": 3,
-    #     "new_name": "cat_23",
-    # },
-    # {
-    #     "name": "categorical-feature-38",
-    #     "vocabulary_size": 108,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_24",
-    # },
-    # {
-    #     "name": "categorical-feature-39",
-    #     "vocabulary_size": 36,
-    #     "feature_list_length": 1,
-    #     "new_name": "cat_25",
-    # },
+    {
+        "name": "categorical-feature-37",
+        "vocabulary_size": 12973,
+        "feature_list_length": 3,
+        "new_name": "cat_23",
+    },
+    {
+        "name": "categorical-feature-38",
+        "vocabulary_size": 108,
+        "feature_list_length": 1,
+        "new_name": "cat_24",
+    },
+    {
+        "name": "categorical-feature-39",
+        "vocabulary_size": 36,
+        "feature_list_length": 1,
+        "new_name": "cat_25",
+    },
 ]
 
 # === Model ===
