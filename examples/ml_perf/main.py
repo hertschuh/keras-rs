@@ -15,8 +15,8 @@ from .model import DLRMDCNV2
 # Set random seed.
 SEED = 1337
 
-import jax
-jax.config.update("jax_debug_nans", True)
+# import jax
+# jax.config.update("jax_debug_nans", True)
 
 logger = logging.getLogger(__name__)
 
