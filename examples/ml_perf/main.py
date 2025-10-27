@@ -215,6 +215,20 @@ def main(
     train_generator = generator(train_ds, training=True)
     if do_eval:
         eval_generator = generator(eval_ds, training=False)
+    for first_batch in train_generator:
+        logger.info("Dense inputs:%s", first_batch[0]["dense_input"].shape)
+        for k in first_batch[0]["small_emb_inputs"]:
+            logger.info(
+                "Small embedding inputs:%s %s",
+                k, first_batch[0]["small_emb_inputs"][k].shape,
+            )
+        for k in first_batch[0]["large_emb_inputs"]:
+            logger.info(
+                "Large embedding inputs:%s %s",
+                k, first_batch[0]["large_emb_inputs"][k].shape,
+            )
+        break
+
     # logger.debug("Inspecting one batch of data...")
     # for first_batch in train_generator:
     #     logger.debug("Dense inputs:%s", first_batch[0]["dense_input"])
