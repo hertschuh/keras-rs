@@ -355,7 +355,7 @@ if __name__ == "__main__":
     training_cfg = config["training"]
 
     _, feature_spec = create_feature_specs(
-        vocab_sizes=vocab_sizes
+        vocab_sizes=VOCAB_SIZES
     )
     print("feature_spec:", feature_spec)
 
