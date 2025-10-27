@@ -208,6 +208,7 @@ class DLRMDCNV2(keras.Model):
 
         # Predictions
         outputs = self.top_mlp(x)
+        jax.debug.print("--------> {}", outputs)
         return outputs
 
     def _get_mlp_layers(
