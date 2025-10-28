@@ -113,16 +113,16 @@ class DLRMDCNV2(keras.Model):
         )
         logging.debug("Initialised Bottom MLP: %s", self.bottom_mlp)
         # Distributed embeddings for large embedding tables
-        self.embedding_layer = keras_rs.layers.DistributedEmbedding(
-            feature_configs=large_emb_feature_configs,
-            table_stacking="auto",
-            auto_stack_kwargs=auto_stack_kwargs,
-            dtype=dtype,
-            name="embedding_layer",
-        )
-        logging.debug(
-            "Initialised `DistributedEmbedding` layer: %s", self.embedding_layer
-        )
+        # self.embedding_layer = keras_rs.layers.DistributedEmbedding(
+        #     feature_configs=large_emb_feature_configs,
+        #     table_stacking="auto",
+        #     auto_stack_kwargs=auto_stack_kwargs,
+        #     dtype=dtype,
+        #     name="embedding_layer",
+        # )
+        # logging.debug(
+        #     "Initialised `DistributedEmbedding` layer: %s", self.embedding_layer
+        # )
         # Embedding layers for small embedding tables
         self.small_embedding_layers = None
         if small_emb_features:
@@ -188,7 +188,7 @@ class DLRMDCNV2(keras.Model):
 
         # Embed features.
         dense_output = self.bottom_mlp(dense_input)
-        large_embeddings = self.embedding_layer(large_emb_inputs)
+        # large_embeddings = self.embedding_layer(large_emb_inputs)
         small_embeddings = None
         if self.small_emb_features:
             small_embeddings = []
@@ -204,7 +204,10 @@ class DLRMDCNV2(keras.Model):
             small_embeddings = ops.concatenate(small_embeddings, axis=-1)
 
         # Interaction
-        to_concatenate = [dense_output, *large_embeddings.values()]
+        to_concatenate = [
+            dense_output,
+            # *large_embeddings.values()
+        ]
         if small_embeddings is not None:
             to_concatenate += [small_embeddings]
         x = ops.concatenate(to_concatenate, axis=-1)

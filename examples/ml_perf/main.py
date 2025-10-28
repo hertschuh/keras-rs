@@ -198,13 +198,13 @@ def main(
         large embedding features.
         """
         for features, labels in dataset:
-            preprocessed_large_embeddings = model.embedding_layer.preprocess(
-                features["large_emb_inputs"], training=training
-            )
+            # preprocessed_large_embeddings = model.embedding_layer.preprocess(
+            #     features["large_emb_inputs"], training=training
+            # )
 
             x = {
                 "dense_input": features["dense_input"],
-                "large_emb_inputs": preprocessed_large_embeddings,
+                # "large_emb_inputs": preprocessed_large_embeddings,
                 "small_emb_inputs": features["small_emb_inputs"],
             }
             y = labels
