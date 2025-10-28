@@ -130,7 +130,7 @@ def main(
         optimizer=keras.optimizers.Adagrad(
             learning_rate=training_cfg.learning_rate
         ),
-        metrics=[keras.metrics.BinaryAccuracy()],
+        # metrics=[keras.metrics.BinaryAccuracy()],
     )
     logger.info("Initialised model: %s", model)
 
