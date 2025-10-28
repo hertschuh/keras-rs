@@ -5,6 +5,7 @@ import keras
 from keras import ops
 
 import keras_rs
+import jax
 
 Tensor: TypeAlias = Any
 
@@ -215,6 +216,7 @@ class DLRMDCNV2(keras.Model):
 
         # Predictions
         outputs = self.top_mlp(x)
+        jax.debug.print("outputs={}", outputs)
         return outputs
 
     def _get_mlp_layers(
