@@ -184,8 +184,8 @@ model_config = Config()
 model_config.embedding_dim = 128
 model_config.allow_id_dropping = True
 model_config.embedding_threshold = 21000
-model_config.max_ids_per_partition = 8192
-model_config.max_unique_ids_per_partition = 4096
+model_config.max_ids_per_partition = 8192 * 2
+model_config.max_unique_ids_per_partition = 4096 * 2
 model_config.learning_rate = 0.0034
 
 # MLP
@@ -199,7 +199,7 @@ model_config.dcn_projection_dim = 512
 # === Training ===
 training_config = Config()
 training_config.learning_rate = 0.0034
-training_config.global_batch_size = 32768
+training_config.global_batch_size = 16896
 # Set `num_steps` instead of `num_epochs`, because we are using a Python
 # generator.
 training_config.num_steps = 10
