@@ -152,12 +152,12 @@ dataset_config.lookup = [
     #     "feature_list_length": 27,
     #     "new_name": "21",
     # },
-    # {
-    #     "name": "categorical-feature-36",
-    #     "vocabulary_size": 590152,
-    #     "feature_list_length": 10,
-    #     "new_name": "22",
-    # },
+    {
+        "name": "categorical-feature-36",
+        "vocabulary_size": 590152,
+        "feature_list_length": 10,
+        "new_name": "22",
+    },
     {
         "name": "categorical-feature-37",
         "vocabulary_size": 12973,
