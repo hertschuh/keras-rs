@@ -74,24 +74,24 @@ dataset_config.lookup = [
     #     "feature_list_length": 1,
     #     "new_name": "8",
     # },
-    # {
-    #     "name": "categorical-feature-23",
-    #     "vocabulary_size": 40000000,
-    #     "feature_list_length": 7,
-    #     "new_name": "9",
-    # },
-    # {
-    #     "name": "categorical-feature-24",
-    #     "vocabulary_size": 3067956,
-    #     "feature_list_length": 3,
-    #     "new_name": "10",
-    # },
-    # {
-    #     "name": "categorical-feature-25",
-    #     "vocabulary_size": 405282,
-    #     "feature_list_length": 8,
-    #     "new_name": "11",
-    # },
+    {
+        "name": "categorical-feature-23",
+        "vocabulary_size": 40000000,
+        "feature_list_length": 7,
+        "new_name": "9",
+    },
+    {
+        "name": "categorical-feature-24",
+        "vocabulary_size": 3067956,
+        "feature_list_length": 3,
+        "new_name": "10",
+    },
+    {
+        "name": "categorical-feature-25",
+        "vocabulary_size": 405282,
+        "feature_list_length": 8,
+        "new_name": "11",
+    },
     # {
     #     "name": "categorical-feature-26",
     #     "vocabulary_size": 10,
