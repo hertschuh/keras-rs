@@ -184,7 +184,7 @@ class DLRMDCNV2(keras.Model):
         """
         # Inputs
         dense_input = inputs["dense_input"]
-        large_emb_inputs = inputs["large_emb_inputs"]
+        # large_emb_inputs = inputs["large_emb_inputs"]
 
         # Embed features.
         dense_output = self.bottom_mlp(dense_input)
