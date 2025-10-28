@@ -152,30 +152,30 @@ dataset_config.lookup = [
         "feature_list_length": 27,
         "new_name": "21",
     },
+    # {
+    #     "name": "categorical-feature-36",
+    #     "vocabulary_size": 590152,
+    #     "feature_list_length": 10,
+    #     "new_name": "22",
+    # },
     {
-        "name": "categorical-feature-36",
-        "vocabulary_size": 590152,
-        "feature_list_length": 10,
-        "new_name": "22",
+        "name": "categorical-feature-37",
+        "vocabulary_size": 12973,
+        "feature_list_length": 3,
+        "new_name": "23",
     },
-    # {
-    #     "name": "categorical-feature-37",
-    #     "vocabulary_size": 12973,
-    #     "feature_list_length": 3,
-    #     "new_name": "23",
-    # },
-    # {
-    #     "name": "categorical-feature-38",
-    #     "vocabulary_size": 108,
-    #     "feature_list_length": 1,
-    #     "new_name": "24",
-    # },
-    # {
-    #     "name": "categorical-feature-39",
-    #     "vocabulary_size": 36,
-    #     "feature_list_length": 1,
-    #     "new_name": "25",
-    # },
+    {
+        "name": "categorical-feature-38",
+        "vocabulary_size": 108,
+        "feature_list_length": 1,
+        "new_name": "24",
+    },
+    {
+        "name": "categorical-feature-39",
+        "vocabulary_size": 36,
+        "feature_list_length": 1,
+        "new_name": "25",
+    },
 ]
 
 # === Model ===
