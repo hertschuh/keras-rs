@@ -3,12 +3,14 @@ from keras.utils import Config
 config = Config()
 
 # === Experiment metadata ===
-config.experiment_name = "v6e_16"
-config.model_dir = "./v6e_16"
+config.experiment_name = "v6e_16_full_dataset"
+config.model_dir = "./v6e_16_full_dataset"
 
 # === Dataset ===
 dataset_config = Config()
 dataset_config.file_pattern = None
+dataset_config.val_file_pattern = None
+
 # Features
 dataset_config.label = "clicked"
 dataset_config.dense = [f"int-feature-{i}" for i in range(1, 14)]
@@ -192,10 +194,12 @@ model_config.dcn_projection_dim = 512
 # === Training ===
 training_config = Config()
 training_config.learning_rate = 0.0034
-training_config.global_batch_size = 16384
-# Set `num_steps` in the main config file instead of num_epochs, because we are
-# using a Python generator.
-training_config.num_steps = 20
+training_config.global_batch_size = 16896
+# Set `num_steps` instead of `num_epochs`, because we are using a Python
+# generator.
+training_config.num_steps = 10
+training_config.eval_freq = 5
+training_config.num_eval_steps = 10
 
 # === Assign all configs to the root config ===
 config.dataset = dataset_config
