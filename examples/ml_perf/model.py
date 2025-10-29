@@ -5,7 +5,6 @@ import keras
 from keras import ops
 
 import keras_rs
-import jax
 
 Tensor: TypeAlias = Any
 
@@ -205,10 +204,7 @@ class DLRMDCNV2(keras.Model):
             small_embeddings = ops.concatenate(small_embeddings, axis=-1)
 
         # Interaction
-        to_concatenate = [
-            dense_output,
-            *large_embeddings.values()
-        ]
+        to_concatenate = [dense_output, *large_embeddings.values()]
         if small_embeddings is not None:
             to_concatenate += [small_embeddings]
         x = ops.concatenate(to_concatenate, axis=-1)
@@ -216,7 +212,6 @@ class DLRMDCNV2(keras.Model):
 
         # Predictions
         outputs = self.top_mlp(x)
-        # jax.debug.print("outputs={}", outputs)
         return outputs
 
     def _get_mlp_layers(

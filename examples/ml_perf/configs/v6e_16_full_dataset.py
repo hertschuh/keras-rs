@@ -10,7 +10,7 @@ config.model_dir = "./v6e_16_full_dataset"
 dataset_config = Config()
 dataset_config.file_pattern = (
     "gs://qinyiyan-vm/mlperf-dataset/criteo_merge_balanced_4224/"
-    "train-0000[0-3]-of-01024tfrecord"
+    "train-*-of-01024tfrecord"
 )
 dataset_config.val_file_pattern = None
 # The path which we are reading from already has the batched dataset.
@@ -199,10 +199,10 @@ model_config.dcn_projection_dim = 512
 # === Training ===
 training_config = Config()
 training_config.learning_rate = 0.0034
-training_config.global_batch_size = 16384 * 2
+training_config.global_batch_size = 16384
 # Set `num_steps` instead of `num_epochs`, because we are using a Python
 # generator.
-training_config.num_steps = 10
+training_config.num_steps = 28000
 training_config.eval_freq = 5
 training_config.num_eval_steps = 10
 
