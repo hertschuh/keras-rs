@@ -664,34 +664,22 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
 
             # Aggregate stats across all processes/devices via pmax.
             all_stats = multihost_utils.process_allgather(stats)
-            # print("### all_stats", all_stats)
-            # aggregated_stats = all_stats
-            aggregated_stats = jax.tree.map(
-                lambda x: np.max(x, axis=0), all_stats
-            )
+            aggregated_stats = jax.tree.map(np.max, all_stats)
 
             # Check if stats changed enough to warrant action.
             stacked_table_specs = embedding.get_stacked_table_specs(
                 self._config.feature_specs
             )
             changed = any(
-                np.max(aggregated_stats.max_ids_per_partition[stack_name])
+                aggregated_stats.max_ids_per_partition[stack_name]
                 > spec.max_ids_per_partition
-                or np.max(
-                    aggregated_stats.max_unique_ids_per_partition[stack_name]
-                )
+                or aggregated_stats.max_unique_ids_per_partition[stack_name]
                 > spec.max_unique_ids_per_partition
-                or (
-                    np.max(
-                        aggregated_stats.required_buffer_size_per_sc[stack_name]
-                    )
-                    * num_sc_per_device
-                )
-                > (spec.suggested_coo_buffer_size_per_device or 0)
+                or aggregated_stats.required_buffer_size_per_sc[stack_name] * num_sc_per_device > (spec.suggested_coo_buffer_size_per_device or 0)
                 for stack_name, spec in stacked_table_specs.items()
             )
 
-            # # Update configuration and repeat preprocessing if stats changed.
+            # Update configuration and repeat preprocessing if stats changed.
             if changed:
                 embedding.update_preprocessing_parameters(
                     self._config.feature_specs,
