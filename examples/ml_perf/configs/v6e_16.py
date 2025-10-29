@@ -180,7 +180,7 @@ model_config.embedding_dim = 128
 model_config.allow_id_dropping = True
 model_config.embedding_threshold = 21000
 model_config.max_ids_per_partition = 260
-model_config.max_unique_ids_per_partition = 260
+model_config.max_unique_ids_per_partition = 270
 model_config.learning_rate = 0.0034
 
 # MLP

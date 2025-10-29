@@ -483,45 +483,25 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
         table_specs = embedding.get_table_specs(feature_specs)
         table_stacks = jte_table_stacking.get_table_stacks(table_specs)
 
-        # Compute max ids for stacked tables.
-        stack_max_ids_per_partition: dict[str, int] = collections.defaultdict(
-            int
-        )
-        stack_max_unique_ids_per_partition: dict[str, int] = (
-            collections.defaultdict(int)
-        )
-        for stack_name, table_specs in table_stacks.items():
-            for table_spec in table_specs:
-                stack_max_ids_per_partition[stack_name] = max(
-                    stack_max_ids_per_partition[stack_name],
-                    table_spec.max_ids_per_partition,
-                )
-                stack_max_unique_ids_per_partition[stack_name] = max(
-                    stack_max_unique_ids_per_partition[stack_name],
-                    table_spec.max_unique_ids_per_partition,
-                )
-
-        def my_replace(stack_name, stacked_table_spec):
-            print("### ", stack_name, " max_ids_per_partition:", stacked_table_spec.max_ids_per_partition, "->", stack_max_ids_per_partition[stack_name])
-            print("### ", stack_name, " max_unique_ids_per_partition:", stacked_table_spec.max_unique_ids_per_partition, "->", stack_max_unique_ids_per_partition[stack_name])
-            return dataclasses.replace(
-                stacked_table_spec,
-                max_ids_per_partition=stack_max_ids_per_partition[stack_name],
-                max_unique_ids_per_partition=stack_max_unique_ids_per_partition[
-                    stack_name
-                ],
-            )
-
         # Create new instances of StackTableSpec with updated values.
         stacked_table_specs = embedding.get_stacked_table_specs(feature_specs)
-        new_stacked_table_specs = {
-            stack_name: my_replace(stack_name, stacked_table_spec)
+        stacked_table_specs = {
+            stack_name: dataclasses.replace(
+                stacked_table_spec,
+                max_ids_per_partition=max(
+                    ts.max_ids_per_partition for ts in table_stacks[stack_name]
+                ),
+                max_unique_ids_per_partition=max(
+                    ts.max_unique_ids_per_partition
+                    for ts in table_stacks[stack_name]
+                ),
+            )
             for stack_name, stacked_table_spec in stacked_table_specs.items()
         }
 
         # Rewrite the stacked_table_spec of all the TableSpecs.
         for stack_name, table_specs in table_stacks.items():
-            new_stacked_table_spec = new_stacked_table_specs[stack_name]
+            new_stacked_table_spec = stacked_table_specs[stack_name]
             for table_spec in table_specs:
                 table_spec.stacked_table_spec = new_stacked_table_spec
 
