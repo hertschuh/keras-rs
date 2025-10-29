@@ -502,8 +502,8 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                 )
 
         def my_replace(stack_name, stacked_table_spec):
-            print("### ", stack_name, " max_ids_per_partition: " + stacked_table_spec.max_ids_per_partition + " -> " + stack_max_ids_per_partition[stack_name])
-            print("### ", stack_name, " max_unique_ids_per_partition: " + stacked_table_spec.max_unique_ids_per_partition + " -> " + stack_max_unique_ids_per_partition[stack_name])
+            print("### ", stack_name, " max_ids_per_partition:", stacked_table_spec.max_ids_per_partition, "->", stack_max_ids_per_partition[stack_name])
+            print("### ", stack_name, " max_unique_ids_per_partition:", stacked_table_spec.max_unique_ids_per_partition, "->", stack_max_unique_ids_per_partition[stack_name])
             return dataclasses.replace(
                 stacked_table_spec,
                 max_ids_per_partition=stack_max_ids_per_partition[stack_name],
