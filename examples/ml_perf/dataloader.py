@@ -225,11 +225,4 @@ class DataLoader:
             dataset = dataset.repeat()
 
         dataset = dataset.prefetch(tf.data.AUTOTUNE)
-
-        # Random try, lol
-        options = tf.data.Options()
-        options.deterministic = False
-        options.threading.private_threadpool_size = 96
-        dataset = dataset.with_options(options)
-
         return dataset
