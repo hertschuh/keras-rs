@@ -675,12 +675,16 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                 > spec.max_ids_per_partition
                 or aggregated_stats.max_unique_ids_per_partition[stack_name]
                 > spec.max_unique_ids_per_partition
-                or aggregated_stats.required_buffer_size_per_sc[stack_name] * num_sc_per_device > (spec.suggested_coo_buffer_size_per_device or 0)
+                or aggregated_stats.required_buffer_size_per_sc[stack_name]
+                * num_sc_per_device
+                > (spec.suggested_coo_buffer_size_per_device or 0)
                 for stack_name, spec in stacked_table_specs.items()
             )
 
             # Update configuration and repeat preprocessing if stats changed.
             if changed:
+                print("### changed", aggregated_stats)
+
                 embedding.update_preprocessing_parameters(
                     self._config.feature_specs,
                     aggregated_stats,
