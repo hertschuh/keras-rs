@@ -2,6 +2,7 @@ import argparse
 import importlib
 import logging
 import os
+import time
 
 os.environ["KERAS_BACKEND"] = "jax"
 
@@ -132,7 +133,7 @@ def main(
         ),
         metrics=[
             keras.metrics.BinaryAccuracy(),
-            keras.metrics.AUC()
+            keras.metrics.AUC(),
         ],
     )
     logger.info("Initialised model: %s", model)
@@ -230,6 +231,7 @@ def main(
 
     # === Training ===
     logger.info("Training...")
+    t0 = time.perf_counter()
     model.fit(
         train_generator,
         # validation_data=eval_generator,
@@ -240,7 +242,7 @@ def main(
         # validation_freq=1,
         # verbose=0,
     )
-    logger.info("Training finished")
+    logger.info("Training finished in %s seconds", time.perf_counter() - t0)
 
 
 if __name__ == "__main__":
