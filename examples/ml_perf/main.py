@@ -9,6 +9,9 @@ import keras
 
 import keras_rs
 
+import jax
+jax.config.update("jax_debug_nans", True)
+
 from .dataloader import DataLoader
 from .model import DLRMDCNV2
 
