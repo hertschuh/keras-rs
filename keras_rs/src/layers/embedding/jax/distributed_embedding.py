@@ -501,16 +501,21 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                     table_spec.max_unique_ids_per_partition,
                 )
 
-        # Create new instances of StackTableSpec with updated values.
-        stacked_table_specs = embedding.get_stacked_table_specs(feature_specs)
-        new_stacked_table_specs = {
-            stack_name: dataclasses.replace(
+        def my_replace(stack_name, stacked_table_spec):
+            print("### ", stack_name, " max_ids_per_partition: " + stacked_table_spec.max_ids_per_partition + " -> " + stack_max_ids_per_partition[stack_name])
+            print("### ", stack_name, " max_unique_ids_per_partition: " + stacked_table_spec.max_unique_ids_per_partition + " -> " + stack_max_unique_ids_per_partition[stack_name])
+            return dataclasses.replace(
                 stacked_table_spec,
                 max_ids_per_partition=stack_max_ids_per_partition[stack_name],
                 max_unique_ids_per_partition=stack_max_unique_ids_per_partition[
                     stack_name
                 ],
             )
+
+        # Create new instances of StackTableSpec with updated values.
+        stacked_table_specs = embedding.get_stacked_table_specs(feature_specs)
+        new_stacked_table_specs = {
+            stack_name: my_replace(stack_name, stacked_table_spec)
             for stack_name, stacked_table_spec in stacked_table_specs.items()
         }
 
