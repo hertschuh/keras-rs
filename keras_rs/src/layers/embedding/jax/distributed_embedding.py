@@ -685,6 +685,35 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             if changed:
                 print("### changed", aggregated_stats)
 
+                for stack_name, spec in stacked_table_specs.items():
+                    aggregated_stats.max_ids_per_partition[stack_name] = np.max(
+                        [
+                            aggregated_stats.max_ids_per_partition[stack_name],
+                            spec.max_ids_per_partition,
+                        ]
+                    )
+                    aggregated_stats.max_unique_ids_per_partition[
+                        stack_name
+                    ] = np.max(
+                        [
+                            aggregated_stats.max_unique_ids_per_partition[
+                                stack_name
+                            ],
+                            spec.max_unique_ids_per_partition,
+                        ]
+                    )
+                    aggregated_stats.required_buffer_size_per_sc[stack_name] = (
+                        np.max(
+                            [
+                                aggregated_stats.required_buffer_size_per_sc[
+                                    stack_name
+                                ]
+                                * num_sc_per_device,
+                                spec.suggested_coo_buffer_size_per_device or 0,
+                            ]
+                        )
+                    )
+
                 embedding.update_preprocessing_parameters(
                     self._config.feature_specs,
                     aggregated_stats,
