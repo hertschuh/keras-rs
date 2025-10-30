@@ -707,9 +707,15 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                             [
                                 aggregated_stats.required_buffer_size_per_sc[
                                     stack_name
-                                ]
-                                * num_sc_per_device,
-                                spec.suggested_coo_buffer_size_per_device or 0,
+                                ],
+                                (
+                                    (
+                                        spec.suggested_coo_buffer_size_per_device
+                                        or 0
+                                    )
+                                    + (num_sc_per_device - 1)
+                                )
+                                // num_sc_per_device,
                             ]
                         )
                     )
