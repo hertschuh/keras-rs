@@ -6,10 +6,10 @@ import time
 
 os.environ["KERAS_BACKEND"] = "jax"
 
+import jax
 import keras
 
 import keras_rs
-import jax
 
 from .dataloader import DataLoader
 from .model import DLRMDCNV2
