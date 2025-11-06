@@ -664,7 +664,7 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
             # Aggregate stats across all processes/devices via pmax.
             all_stats = multihost_utils.process_allgather(stats)
             all_stats = jax.tree.map(np.max, all_stats)
-            # print(">>> stats", all_stats)
+            print(">>> stats", all_stats)
 
             # Check if stats changed enough to warrant action.
             stacked_table_specs = embedding.get_stacked_table_specs(
@@ -680,6 +680,9 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                 > (spec.suggested_coo_buffer_size_per_device or 0)
                 for stack_name, spec in stacked_table_specs.items()
             )
+
+            if not changed:
+                print("<<< changed False")
 
             # Update configuration and repeat preprocessing if stats changed.
             if changed:
