@@ -718,6 +718,14 @@ class DistributedEmbedding(base_distributed_embedding.DistributedEmbedding):
                     num_sc_per_device,
                 )
 
+                table_specs = embedding.get_table_specs(self._config.feature_specs)
+                table_stacks = jte_table_stacking.get_table_stacks(table_specs)
+                stacked_table_specs = {
+                    stack_name: stack[0].stacked_table_spec
+                    for stack_name, stack in table_stacks.items()
+                }
+                print("### new", {n: f"max_ids: {s.max_ids_per_partition} max_uinque_ids: {s.max_unique_ids_per_partition} buffer: {s.suggested_coo_buffer_size_per_device}" for s, n in stacked_table_specs})
+
                 # # Re-execute preprocessing with consistent input statistics.
                 # preprocessed, _ = embedding_utils.stack_and_shard_samples(
                 #     self._config.feature_specs,
